@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tesuta">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <application
+        android:name="com.tesuta.shopping.C0456b"
+        android:allowBackup="true"
+        android:icon="@drawable/h_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/h_logo"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.tesuta.shopping.Master_Home"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Generate_otp"
+            android:label="Generate OTP"
+            android:parentActivityName="com.tesuta.shopping.Login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Verify_otp"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Forgot_Password"
+            android:label="Forgot Password"
+            android:parentActivityName="com.tesuta.shopping.Login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Update_password"
+            android:label="Update Password"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Check"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tesuta.shopping.Profile"
+            android:label="Profile"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Product_details"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Product"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Cart"
+            android:label="My Cart"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tesuta.shopping.Query"
+            android:label="Query"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.tesuta.shopping.Order_details"
+            android:label="Order Details"
+            android:parentActivityName="com.tesuta.shopping.Master_Home" />
+        <activity android:name="com.tesuta.shopping.Splash_activity" />
+        <activity
+            android:name="com.tesuta.shopping.About"
+            android:label="About"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName="com.tesuta.shopping.Master_Home" />
+        <activity
+            android:name="com.tesuta.shopping.Searchactivity"
+            android:label="Search"
+            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.tesuta.shopping.Checkout"
+            android:parentActivityName="com.tesuta.shopping.Cart"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:label="Confirm address"></activity>
+
+        <receiver
+            android:name="com.tesuta.shopping.SmsReceiver"
+            android:enabled="true">
+            <intent-filter android:priority="214783647">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
