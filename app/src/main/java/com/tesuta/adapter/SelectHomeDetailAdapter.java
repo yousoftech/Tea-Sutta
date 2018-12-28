@@ -267,7 +267,7 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
                     if(result.getStatus().equals("success")) {
 
                         String ttl=gmailVH.c_quantity.getText().toString();
-                        gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
+                            gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
                         TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
                     }

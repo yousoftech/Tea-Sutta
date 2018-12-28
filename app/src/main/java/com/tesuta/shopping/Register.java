@@ -2,9 +2,9 @@ package com.tesuta.shopping;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +19,9 @@ import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
 import com.tesuta.utils.NetworkUtils;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -145,6 +148,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
 
                                 Intent i = new Intent(Register.this,Check.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(i);
                                 finish();
                             }
@@ -168,6 +172,26 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             Toast.makeText(this, "Password Does Not Match", Toast.LENGTH_SHORT).show();
         }
         }
+    public boolean isEmailValid(String email)
+    {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if(matcher.matches())
+            return true;
+        else
+            return false;
+    }
     public boolean validate() {
         boolean valid = true;
 
@@ -182,6 +206,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         edt_locality1 = edt_locality.getText().toString();
         edt_pincode1 = edt_pincode.getText().toString();
 
+        if(edt_email1.isEmpty())
+        {
+            valid = true;
+        }
+        else if(isEmailValid(edt_email1)==false)
+        {
+            valid=false;
+            edt_email.setError("Enter Correct Email");
+            edt_email.requestFocus();
+        }
         if (edt_fname1.isEmpty()) {
             edt_fname.setError("Enter a firstname");
             edt_fname.requestFocus();

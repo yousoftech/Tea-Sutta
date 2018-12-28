@@ -1,10 +1,8 @@
 package com.tesuta.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +35,9 @@ public class OSViewHolder1 extends GroupViewHolder {
     private TextView or_cancel;
     private ImageView h_e_arrow;
     private CardView h_e_card;
+    private TextView txt_disc;
+    private TextView or_disc;
+    private TextView or_ship;
  
     Context context;
     public OSViewHolder1(View itemView) {
@@ -46,7 +47,10 @@ public class OSViewHolder1 extends GroupViewHolder {
         or_status = (TextView) itemView.findViewById(R.id.or_status);
         or_total = (TextView) itemView.findViewById(R.id.or_total);
         or_quntity = (TextView) itemView.findViewById(R.id.or_quntity);
-        or_cancel = (TextView) itemView.findViewById(R.id.or_cancel);
+        //or_cancel = (TextView) itemView.findViewById(R.id.or_cancel);
+        or_disc = (TextView) itemView.findViewById(R.id.or_disc);
+        txt_disc = (TextView) itemView.findViewById(R.id.txt_disc);
+        or_ship = (TextView) itemView.findViewById(R.id.or_ship);
         h_e_arrow = (ImageView) itemView.findViewById(R.id.h_e_arrow);
         h_e_card = (CardView) itemView.findViewById(R.id.card_view);
     }
@@ -71,6 +75,16 @@ public class OSViewHolder1 extends GroupViewHolder {
         or_date.setText(seperatr_data[0]);
         or_status.setText(seperatr_data[1]);
         or_total.setText(seperatr_data[2]);
+        if(Integer.parseInt(seperatr_data[6])<1)
+        {
+            or_disc.setVisibility(View.INVISIBLE);
+            txt_disc.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            or_disc.setText(seperatr_data[6]);
+        }
+        or_ship.setText(seperatr_data[5]);
         or_quntity.setText(seperatr_data[3]);
         if (seperatr_data[1].equals("Cancel"))
         {
@@ -78,37 +92,43 @@ public class OSViewHolder1 extends GroupViewHolder {
         }
         if (seperatr_data[1].equals("Pending"))
         {
-            or_cancel.setVisibility(View.VISIBLE);
+            //or_cancel.setVisibility(View.GONE);
         }
-        or_cancel.setOnClickListener(new View.OnClickListener() {
+        /*or_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("fgh","Cancel");
-                // ((Cart)context).callCartData();
-                // itemView.getContext().startActivity(new Intent("com.hshop.shopping.Master_Home"));
-                AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
-                builder.setMessage("Do you want to Cancel Order ?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Toast.makeText(itemView.getContext(), seperatr_data[4], Toast.LENGTH_SHORT).show();
-                                ordercancel(seperatr_data[4]);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.setTitle("Cancel Order");
-                alert.show();
+                if(false){*//*
+                    Log.d("fgh","Cancel");
+                    // ((Cart)context).callCartData();
+                    // itemView.getContext().startActivity(new Intent("com.hshop.shopping.Master_Home"));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+                    builder.setMessage("Do you want to Cancel Order ?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Toast.makeText(itemView.getContext(), seperatr_data[4], Toast.LENGTH_SHORT).show();
+                                    ordercancel(seperatr_data[4]);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.setTitle("Cancel Order");
+                    alert.show();
 
+                *//*}
+                else{
+                    Toast.makeText(context, "You Can Not Cancel Order", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Contact Customer Service", Toast.LENGTH_LONG).show();
+                }
             }
         });
-
+*/
     }
     private void ordercancel(String order_id) {
         RestClient.GitApiInterface service = RestClient.getClient();

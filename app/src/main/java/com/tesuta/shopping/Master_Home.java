@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.tesuta.R;
 import com.tesuta.data.BaseItem;
 import com.tesuta.data.CustomDataProvider;
@@ -42,7 +35,6 @@ import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
 import com.tesuta.views.LevelBeamView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -284,56 +276,7 @@ public class Master_Home extends AppCompatActivity
                listAdapter.setDataItems(CustomDataProvider.getInitialItems());
            }
 
-           JSONObject dataadd()
-               {
 
-                   //final List<?>[] l = new List<?>[1];
-                   final JSONObject[] responce = new JSONObject[1];
-                   final RequestQueue requestQueue = Volley.newRequestQueue(this);
-                   String url="http://teasuttaapi.yousoftech.com/API/get_category.php";
-                   final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
-                           url,null,
-                           new com.android.volley.Response.Listener<JSONObject>() {
-                               @Override
-                               public void onResponse(JSONObject response) {
-                                   Log.d("RESPONSE", response.toString());
-                                   String status= null;
-                                   try {
-                                       status = response.getString("status");
-
-                                       if(status.contains("failed"))
-                                       {
-                                           Log.d("search",status.toString());
-                                       }
-                                       else if(status.contains("success")){
-
-                                           //jsonArray[0] =response.getJSONArray("category");
-                                           responce[0] =response;
-                     //                      l[0] =CustomDataProvider.getSubItems((BaseItem) object,Master_Home.this,response);
-                                           /*for(int i=0;i<jsonArray.length();i++)
-                                           {
-                                               JSONObject obj=jsonArray.getJSONObject(i);
-                                               listcat1.add(new Item(obj.getString("cat_name"),obj.getString("cat_id")));
-                                           }*/
-                                       }
-                                   } catch (JSONException e) {
-                                       e.printStackTrace();
-                                   }
-                               }
-                           }, new com.android.volley.Response.ErrorListener() {
-                       @Override
-                       public void onErrorResponse(VolleyError error) {
-
-                           Log.d("RESPONSE", "That didn't work!");
-                       }
-                   });
-                   request.setRetryPolicy(new DefaultRetryPolicy(
-                           0,
-                           DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                           DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                   requestQueue.add(request);
-                   return responce[0];
-               }
 
 
 

@@ -55,6 +55,7 @@ public class Order_details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i1 = new Intent(Order_details.this,Master_Home.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i1);
                 finish();
             }
@@ -98,6 +99,8 @@ public class Order_details extends AppCompatActivity {
                                     ArrayList<Phone1> iphones = new ArrayList<>();
                                     String o_date = getallOrderExpandLists.get(i).getOrd_date();
                                     String o_status = getallOrderExpandLists.get(i).getOrd_status();
+                                    String o_ship=getallOrderExpandLists.get(i).getOrd_ship();
+                                    String o_disc=getallOrderExpandLists.get(i).getOrd_dics();
                                     String o_total = getallOrderExpandLists.get(i).getOrd_totalcost();
                                     String o_quntity = getallOrderExpandLists.get(i).getOrd_totalquntity();
                                     String o_book_id = getallOrderExpandLists.get(i).getOrd_id();
@@ -116,7 +119,7 @@ public class Order_details extends AppCompatActivity {
 
                                         iphones.add(new Phone1(od_name+"!-"+od_actual_cost+"!-"+od_offer_cost+"!-"+od_offer+"!-"+od_quantity+"!-"+od_total+"!-"+od_unit+"!-"+od_image+"!-"+od_pro_id));
                                     }
-                                    mobileOSes.add(new MobileOS1(o_date+"!-"+o_status+"!-"+o_total+"!-"+o_quntity+"!-"+o_book_id, iphones));
+                                    mobileOSes.add(new MobileOS1(o_date+"!-"+o_status+"!-"+o_total+"!-"+o_quntity+"!-"+o_book_id+"!-"+o_ship+"!-"+o_disc, iphones));
                                 }
                                 adapter2 = new RecyclerAdapter1(Order_details.this,mobileOSes);
                                 recyclerView2.setAdapter(adapter2);
@@ -155,5 +158,12 @@ public class Order_details extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        Intent i1 = new Intent(Order_details.this,Master_Home.class);
+        i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i1);
+        finish();
     }
 }

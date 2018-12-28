@@ -1,10 +1,8 @@
 package com.tesuta.shopping;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,13 +14,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tesuta.R;
 import com.tesuta.adapter.SelectCartDetailAdapter;
 import com.tesuta.models.AllCart;
 import com.tesuta.models.AllCartProduct;
-import com.tesuta.models.UserCheckout;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
 import com.tesuta.utils.NetworkUtils;
@@ -44,7 +40,7 @@ public class Cart_details extends Fragment {
     RecyclerView recyclerView;
     SelectCartDetailAdapter adapter;
     List<AllCartProduct> getallCartProductLists = new ArrayList<>();
-    TextView empty_view,c_subtotal,c_subtotal1,c_offerper,c_checktotalcost;
+    TextView empty_view,c_subtotal,c_subtotal1,c_offerper,c_checktotalcost,btncoupen,c_coupen,coupenrupee;
     String user_id,status;
     PopupWindow popupWindow;
     LinearLayout c_linear,final_order,linear_no_internet,emp_empty_bucket;
@@ -63,7 +59,11 @@ public class Cart_details extends Fragment {
         final String user_name[] = user_info.split(",");
         final String user_location[] = user_address.split(",");
 
-
+        btncoupen=(TextView)view.findViewById(R.id.btncoupen);
+        c_coupen=(TextView)view.findViewById(R.id.c_coupen);
+        coupenrupee=(TextView)view.findViewById(R.id.coupenrupee);
+        c_coupen.setVisibility(View.GONE);
+        coupenrupee.setVisibility(View.GONE);
         recyclerView = (RecyclerView) view.findViewById(R.id.gmail_list);
         empty_view = (TextView) view.findViewById(R.id.empty_view);
         c_subtotal = (TextView) view.findViewById(R.id.c_subtotal);
@@ -153,48 +153,7 @@ public class Cart_details extends Fragment {
     }
 
 
-    private void checkout(String mem_string, String user_id, String o_number, String o_society, String o_location, String o_pincode) {
-        RestClient.GitApiInterface service = RestClient.getClient();
-        Call<UserCheckout> call = service.getUsercheckout(mem_string,user_id,o_number,o_society,o_location,o_pincode);
-        call.enqueue(new Callback<UserCheckout>() {
-            @Override
-            public void onResponse(Response<UserCheckout> response) {
 
-                if (response.isSuccess()) {
-                    // request successful (status code 200, 201)
-                    UserCheckout result = response.body();
-                    if(result.getStatus().equals("success")) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage("Order Successfully Placed...!")
-                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent i1 = new Intent(getActivity(),Order_details.class);
-                                        startActivity(i1);
-                                        getActivity().finish();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-
-                    }
-                    else
-                    {
-                        Toast.makeText(getActivity(), "Plz TRY again Later", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    // response received but request not successful (like 400,401,403 etc)
-                    //Handle errors
-                    Toast.makeText(getActivity(), "Server Error", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-    }
 
     public void callCartData() {
         c_linear.setVisibility(View.INVISIBLE);

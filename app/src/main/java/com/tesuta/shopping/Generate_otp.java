@@ -100,6 +100,7 @@ public class Generate_otp extends AppCompatActivity implements View.OnClickListe
 
                        //  Toast.makeText(Generate_otp.this,finalotp, Toast.LENGTH_SHORT).show();
                         Intent i1 = new Intent(Generate_otp.this,Verify_otp.class);
+                        i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         i1.putExtra("mem_contact",contact);
                         i1.putExtra("mem_otp",finalotp);
                         startActivity(i1);

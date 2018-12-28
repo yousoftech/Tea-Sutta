@@ -13,6 +13,35 @@ public class AllCart {
     @SerializedName("status")
     @Expose
     private String status;
+    private String coupen;
+
+    public String getCoupen() {
+        return coupen;
+    }
+
+    public void setCoupen(String coupen) {
+        this.coupen = coupen;
+    }
+
+    public String getCoupencode() {
+        return coupencode;
+    }
+
+    public void setCoupencode(String coupencode) {
+        this.coupencode = coupencode;
+    }
+
+    private String coupencode;
+
+    public String getOrd_id() {
+        return ord_id;
+    }
+
+    public void setOrd_id(String ord_id) {
+        this.ord_id = ord_id;
+    }
+
+    private String ord_id;
 
     public String getStatus() {
         return status;

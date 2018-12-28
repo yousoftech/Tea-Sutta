@@ -69,29 +69,29 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="\u20B9"
-                        android:layout_marginRight="3dp"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/od_actual_cost"
-                        android:background="@drawable/strike"
-                        android:text="304" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="\u20B9"
-                        android:layout_marginRight="3dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/od_offer_cost"
-                        android:text="304"
-                        android:textColor="@color/bg3" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="\u20B9"
+                            android:layout_marginRight="3dp"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/od_actual_cost"
+                            android:background="@drawable/strike"
+                            android:text="304" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="\u20B9"
+                            android:layout_marginRight="3dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/od_offer_cost"
+                            android:text="304"
+                            android:textColor="@color/bg3" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

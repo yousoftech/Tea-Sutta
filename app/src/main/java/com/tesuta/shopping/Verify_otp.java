@@ -113,6 +113,7 @@ public class Verify_otp extends AppCompatActivity implements View.OnClickListene
 
                         //  Toast.makeText(Generate_otp.this,finalotp, Toast.LENGTH_SHORT).show();
                         Intent i1 = new Intent(Verify_otp.this,Verify_otp.class);
+                        i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         i1.putExtra("mem_contact",contact);
                         i1.putExtra("mem_otp",finalotp);
                         startActivity(i1);
@@ -145,6 +146,7 @@ public class Verify_otp extends AppCompatActivity implements View.OnClickListene
                 {
                     Intent i1 = new Intent(Verify_otp.this,Register.class);
                     i1.putExtra("mem_contact",mem_contact);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i1);
                 }
                 else

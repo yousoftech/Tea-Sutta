@@ -35,7 +35,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         edt_lcontact = (EditText) findViewById(R.id.edt_lcontact);
         edt_lpassword = (EditText) findViewById(R.id.edt_lpassword);
         btn_login = (Button) findViewById(R.id.btn_login);
@@ -48,7 +47,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         txt_terms.setOnClickListener(this);
         linear_server = (LinearLayout) findViewById(R.id.linear_server);
     }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -83,6 +81,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.txt_signup:
                 Intent i3 = new Intent(Login.this,Generate_otp.class);
+                //i3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i3);
                 break;
             case R.id.txt_terms:
@@ -138,6 +137,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             this.f2467p2.commit();
 
                             Intent i = new Intent(Login.this,Check.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(i);
                             finish();
                         }

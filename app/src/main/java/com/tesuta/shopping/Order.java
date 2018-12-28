@@ -49,7 +49,7 @@ public class Order extends Fragment {
     private ArrayList<MobileOS1> mobileOSes = new ArrayList<>();
     Button start_shopping;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.frag_order, container, false);
 
@@ -63,6 +63,7 @@ public class Order extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i1 = new Intent(getActivity(),Master_Home.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i1);
                 getActivity().finish();
             }
@@ -131,6 +132,8 @@ public class Order extends Fragment {
                                     ArrayList<Phone1> iphones = new ArrayList<>();
                                     String o_date = getallOrderExpandLists.get(i).getOrd_date();
                                     String o_status = getallOrderExpandLists.get(i).getOrd_status();
+                                    String o_ship=getallOrderExpandLists.get(i).getOrd_ship();
+                                    String o_disc=getallOrderExpandLists.get(i).getOrd_dics();
                                     String o_total = getallOrderExpandLists.get(i).getOrd_totalcost();
                                     String o_quntity = getallOrderExpandLists.get(i).getOrd_totalquntity();
                                     String o_book_id = getallOrderExpandLists.get(i).getOrd_id();
@@ -149,7 +152,7 @@ public class Order extends Fragment {
 
                                         iphones.add(new Phone1(od_name+"!-"+od_actual_cost+"!-"+od_offer_cost+"!-"+od_offer+"!-"+od_quantity+"!-"+od_total+"!-"+od_unit+"!-"+od_image+"!-"+od_pro_id));
                                     }
-                                    mobileOSes.add(new MobileOS1(o_date+"!-"+o_status+"!-"+o_total+"!-"+o_quntity+"!-"+o_book_id, iphones));
+                                    mobileOSes.add(new MobileOS1(o_date+"!-"+o_status+"!-"+o_total+"!-"+o_quntity+"!-"+o_book_id+"!-"+o_ship+"!-"+o_disc, iphones));
                                 }
                                 adapter2 = new RecyclerAdapter1(getActivity(),mobileOSes);
                                 recyclerView2.setAdapter(adapter2);

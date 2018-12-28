@@ -23,11 +23,14 @@ public class Check extends AppCompatActivity {
         if (contact != null)
         {
             Intent i1 = new Intent(Check.this,Splash_activity.class);
+            i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i1);
             finish();
         }
         else {
             Intent i1 = new Intent(Check.this,Login.class);
+            i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i1);
             finish();
         }

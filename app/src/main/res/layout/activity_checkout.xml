@@ -58,7 +58,7 @@
                 android:textColor="@color/bg2"
                 android:textSize="18dp"
                 android:id="@+id/txt_locality"
-                android:text="Magodi,Gandhinagar"/>
+                android:text=""/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:textSize="18dp"
                 android:id="@+id/txt_pincode"
                 android:layout_marginLeft="10dp"
-                android:text="- 382355"/>
+                android:text=""/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -123,7 +123,7 @@
                         android:id="@+id/edt_society"
                         android:hint="Street/Society/Office Name *" />
                 </android.support.design.widget.TextInputLayout>
-           <!--     <android.support.design.widget.TextInputLayout
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content">
@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/edt_locality"
                         android:hint="Locality *" />
-                </android.support.design.widget.TextInputLayout>-->
+                </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
@@ -142,9 +142,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/edt_pincode"
                         android:inputType="numberDecimal"
-                        android:hint="Pincode *"
-                        android:text="382845"
-                        android:enabled="false"/>
+                        android:hint="Pincode *"/>
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </ScrollView>

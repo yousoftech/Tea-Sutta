@@ -11,6 +11,24 @@ import java.util.List;
 
 public class AllExpandOrderList {
 
+    public String getOrd_dics() {
+        return ord_dics;
+    }
+
+    public void setOrd_dics(String ord_dics) {
+        this.ord_dics = ord_dics;
+    }
+
+    public String getOrd_ship() {
+        return ord_ship;
+    }
+
+    public void setOrd_ship(String ord_ship) {
+        this.ord_ship = ord_ship;
+    }
+
+    String ord_dics,ord_ship;
+
     public String getOrd_id() {
         return ord_id;
     }

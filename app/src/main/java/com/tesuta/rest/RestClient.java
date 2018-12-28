@@ -1,5 +1,8 @@
 package com.tesuta.rest;
 
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 import com.tesuta.models.AllCancel;
 import com.tesuta.models.AllCart;
 import com.tesuta.models.AllContactCheck;
@@ -22,9 +25,9 @@ import com.tesuta.models.UserLogin;
 import com.tesuta.models.UserMinusProductCart;
 import com.tesuta.models.UserProfile;
 import com.tesuta.models.UserSuggestion;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Response;
+import com.tesuta.models.coupen;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -33,6 +36,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 
@@ -51,7 +55,7 @@ public class RestClient {
         if (gitApiInterface == null) {
 
             OkHttpClient okClient = new OkHttpClient();
-            okClient.interceptors().add(new Interceptor() {
+            okClient.interceptors().add(    new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Response response = chain.proceed(chain.request());
@@ -77,6 +81,15 @@ public class RestClient {
         @FormUrlEncoded
         @POST("API/fetch_home.php")
         Call<AllHome> getAllHome(@Field("mem_string") String mem_string,@Field("user_id") String user_id);
+
+        @FormUrlEncoded
+        @POST("API/sendsms.php")
+        Call<JSONObject> getsendsms(@Field("mem_string") String mem_string,@Field("user_id") String user_id,@Field("mem_sms") String mem_sms);
+
+        @FormUrlEncoded
+        @GET("API/check_coupen_code.php")
+        Call<coupen> coupencheck(@Field("code") String code, @Field("user_id") String user_id, @Field("totalamount") String totalamount);
+
 
         @FormUrlEncoded
         @POST("API/fetch_search.php")
@@ -148,6 +161,11 @@ public class RestClient {
         @POST("API/user_cart_details.php")
         Call<AllCart> getCartDetails(@Field("mem_string") String mem_string, @Field("user_id") String user_id);
 
+        @FormUrlEncoded
+        @POST("API/user_cart_details.php")
+        Call<AllCart> getCartDetailscoupen(@Field("mem_string") String mem_string, @Field("user_id") String user_id, @Field("coupen") String coupen,@Field("coupencode") String coupencode);
+
+
 
         @FormUrlEncoded
         @POST("API/user_cart_add_product.php")
@@ -163,11 +181,13 @@ public class RestClient {
 
         @FormUrlEncoded
         @POST("API/user_check_out.php")
-        Call<UserCheckout> getUsercheckout(@Field("mem_string") String mem_string, @Field("user_id") String user_id, @Field("ord_houseno") String ord_houseno,@Field("ord_society") String ord_society, @Field("ord_locality") String ord_locality, @Field("ord_pincode") String ord_pincode);
+        Call<UserCheckout> getUsercheckout(@Field("mem_string") String mem_string, @Field("user_id") String user_id, @Field("ord_houseno") String ord_houseno,@Field("ord_society") String ord_society, @Field("ord_locality") String ord_locality, @Field("ord_pincode") String ord_pincode, @Field("ord_coupen") String disc, @Field("coupenid") String coupenid);
 
         @FormUrlEncoded
         @POST("API/user_order_details.php")
         Call<AllOrder> getAllorder(@Field("mem_string") String mem_string, @Field("user_id") String user_id);
+
+
 
         @FormUrlEncoded
         @POST("API/user_control_application.php")

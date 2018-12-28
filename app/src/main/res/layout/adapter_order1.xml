@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/bg2"
@@ -86,6 +87,33 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bg2"
+                    android:text="Shipping charge :- ₹  "/>
+                <TextView
+                    android:id="@+id/or_ship"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/bg8"
+                    android:layout_height="wrap_content"
+                    android:text="Total" />
+                <TextView
+                    android:id="@+id/txt_disc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/bg2"
+                    android:text="Discount :- ₹"/>
+                <TextView
+                    android:id="@+id/or_disc"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/bg8"
+                    android:layout_height="wrap_content"
+                    android:text="Quntity" />
+                <!--<TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:textStyle="bold"
@@ -101,7 +129,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/bg1"
                     android:layout_height="wrap_content"
-                    android:text="Cancel Order" />
+                    android:text="Cancel Order" />-->
             </LinearLayout>
         </LinearLayout>
         <View
