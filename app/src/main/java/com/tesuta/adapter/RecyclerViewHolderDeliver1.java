@@ -1,0 +1,71 @@
+package com.tesuta.adapter;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.tesuta.R;
+import com.tesuta.shopping.Product_details;
+import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+
+import java.util.List;
+
+
+
+public class RecyclerViewHolderDeliver1 extends ExpandableRecyclerViewAdapter<OSViewHolderDelivery1, PhoneViewHolder1> {
+
+    private Context activity;
+
+    public RecyclerViewHolderDeliver1(Context activity, List<? extends ExpandableGroup> groups) {
+        super(groups);
+        this.activity = activity;
+    }
+
+    @Override
+    public OSViewHolderDelivery1 onCreateGroupViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.adapter_order_delivery1, parent, false);
+
+        return new OSViewHolderDelivery1(view);
+    }
+
+    @Override
+    public PhoneViewHolder1 onCreateChildViewHolder(ViewGroup parent, final int viewType) {
+        // LayoutInflater layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.adapter_order2, parent, false);
+
+        return new PhoneViewHolder1(view);
+    }
+
+    @Override
+    public void onBindChildViewHolder(PhoneViewHolder1 holder, int flatPosition, ExpandableGroup group, int childIndex) {
+        final Phone1 phone = ((MobileOS1) group).getItems().get(childIndex);
+        holder.onBind(phone,group);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String full_data = phone.getName();
+                String[] seperatr_data = full_data.split("!-");
+                Intent i1 = new Intent(activity, Product_details.class);
+                i1.putExtra("pro_id",seperatr_data[8]);
+                i1.putExtra("pro_name",seperatr_data[0]);
+                activity.startActivity(i1);;
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onBindGroupViewHolder(OSViewHolderDelivery1 holder, int flatPosition, ExpandableGroup group) {
+        holder.setGroupName(group);
+    }
+}

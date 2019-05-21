@@ -1,0 +1,44 @@
+{
+  "project_info": {
+    "project_number": "244937284641",
+    "firebase_url": "https://tesuta-160aa.firebaseio.com",
+    "project_id": "tesuta-160aa",
+    "storage_bucket": "tesuta-160aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244937284641:android:ef98ccafa27d7eb6",
+        "android_client_info": {
+          "package_name": "com.tesuta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "244937284641-61n4jksb0ccau0cb1hugi4rrcsged229.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tesuta",
+            "certificate_hash": "c2e4bd80a2bd8715e49dec821f34c9c37dd6cab7"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKQGUdf0XvqfNpRw1h76kYqe6ae4gsk1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "244937284641-644m45caik9ovnpg4r118v2a2bho9hvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
