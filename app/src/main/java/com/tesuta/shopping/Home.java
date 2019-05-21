@@ -187,14 +187,26 @@ public class Home extends Fragment implements BaseSliderView.OnSliderClickListen
         });
 
         status = NetworkUtils.getConnectivityStatus(getContext());
+       /* if (status.equals("404")) {
+            linear_no_internet.setVisibility(View.VISIBLE);
+        }
+        else {
+            callEventData(Config.mem_string,user_id);
+        }*/
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         if (status.equals("404")) {
             linear_no_internet.setVisibility(View.VISIBLE);
         }
         else {
             callEventData(Config.mem_string,user_id);
         }
-        return view;
     }
+
     public static Fragment newInstance() {
         Home fragment = new Home();
         return fragment;
@@ -397,7 +409,7 @@ public class Home extends Fragment implements BaseSliderView.OnSliderClickListen
     @Override
     public void onSliderClick(BaseSliderView slider) {
         //Toast.makeText(getActivity(),slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(getActivity(),Product.class).putExtra("offer",slider.getBundle().get("extra").toString()).putExtra("offer_name","Special Offer"));
+        //startActivity(new Intent(getActivity(),Product.class).putExtra("offer",slider.getBundle().get("extra").toString()).putExtra("offer_name","Special Offer"));
     }
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -418,66 +430,71 @@ public class Home extends Fragment implements BaseSliderView.OnSliderClickListen
     }
     public int callCartData(String user_id) {
 
+        if(user_id.equals("1")){
+            mCartItemCount= 0;
+        }else{
+            RestClient.GitApiInterface service = RestClient.getClient();
 
-        RestClient.GitApiInterface service = RestClient.getClient();
-
-        Call<AllCart> call = service.getCartDetails( Config.mem_string,user_id);
-        call.enqueue(new Callback<AllCart>() {
-            @Override
+            Call<AllCart> call = service.getCartDetails(Config.mem_string, user_id);
+            call.enqueue(new Callback<AllCart>() {
+                @Override
 
 
-            public void onResponse(Response<AllCart> response) {
-                if (response.isSuccess()) {
-                    // request successful (status code 200, 201)
-                    AllCart result = response.body();
-                    if (result.getStatus().equals("success")) {
-                        if (result.getProduct() != null) {
-                            if (result.getProduct().size() > 0) {
-                                getallCartProductLists.clear();
-                                getallCartProductLists.addAll(result.getProduct());
-                                // adapter.notifyDataSetChanged();
+                public void onResponse(Response<AllCart> response) {
+                    if (response.isSuccess()) {
+                        // request successful (status code 200, 201)
+                        AllCart result = response.body();
+                        if (result.getStatus().equals("success")) {
+                            if (result.getProduct() != null) {
+                                if (result.getProduct().size() > 0) {
+                                    getallCartProductLists.clear();
+                                    getallCartProductLists.addAll(result.getProduct());
+                                    // adapter.notifyDataSetChanged();
 
-                                if (getallCartProductLists.isEmpty()) {
-                                    //     recyclerView.setVisibility(View.GONE);
-                                    //    empty_view.setVisibility(View.VISIBLE);
-                                    mCartItemCount= 0;
-                                    textCartItemCount.setText(mCartItemCount);
-                                } else {
-                                    //  recyclerView.setVisibility(View.VISIBLE);
-                                    //  empty_view.setVisibility(View.GONE);
-                                    int qty=0;
-                                    for(int i=0;i<result.getProduct().size();i++) {
-                                        AllCartProduct jo = result.getProduct().get(i);
-                                        qty= qty+Integer.parseInt(jo.getOde_quantity());
+                                    if (getallCartProductLists.isEmpty()) {
+                                        //     recyclerView.setVisibility(View.GONE);
+                                        //    empty_view.setVisibility(View.VISIBLE);
+                                        mCartItemCount = 0;
+                                        textCartItemCount.setText(mCartItemCount);
+                                    } else {
+                                        //  recyclerView.setVisibility(View.VISIBLE);
+                                        //  empty_view.setVisibility(View.GONE);
+                                        int qty = 0;
+                                        for (int i = 0; i < result.getProduct().size(); i++) {
+                                            AllCartProduct jo = result.getProduct().get(i);
+                                            qty = qty + Integer.parseInt(jo.getOde_quantity());
+                                        }
+                                        int a = qty;
+                                        mCartItemCount = a;
+                                        textCartItemCount.setText(a + "");
                                     }
-                                    int a = qty;
-                                    mCartItemCount= a ;
-                                    textCartItemCount.setText(a + "");
+                                } else {
+                                    //recyclerView.setVisibility(View.GONE);
+                                    //empty_view.setVisibility(View.VISIBLE);
+
+
                                 }
-                            } else {
-                                //recyclerView.setVisibility(View.GONE);
-                                //empty_view.setVisibility(View.VISIBLE);
-
-
                             }
+
+                        } else if (result.getStatus().equals("empty_cart")) {
+
+                        } else {
+
                         }
-
-                    } else if (result.getStatus().equals("empty_cart")){
-
-                    }
-                    else
-                    {
+                    } else {
+                        // response received but request not successful (like 400,401,403 etc)
 
                     }
-                } else {
-                    // response received but request not successful (like 400,401,403 etc)
-
                 }
-            }
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+
+
+
+        }
         return mCartItemCount;
 
     }

@@ -1,7 +1,9 @@
 package com.tesuta.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -10,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tesuta.rest.RestClient;
+import com.tesuta.shopping.C0456b;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,68 +36,22 @@ public class CustomDataProvider {
     Context context;
     List<BaseItem> listcat1 = new ArrayList<>();
 
-    public CustomDataProvider(Context context){
+    public CustomDataProvider(Context context,String id){
         this.context=context;
+        Toast.makeText(context, "this is "+id, Toast.LENGTH_SHORT).show();
         //dataadd();
     }
-    //SharedPreferences prefs = home.getSharedPreferences("user_id",Context.MODE_PRIVATE);
+    SharedPreferences prefs = context.getSharedPreferences("user_id",Context.MODE_PRIVATE);
+
     //C0456b.f2467p = prefs.getSharedPreferences(C0456b.f2907a, 0);
 
     // user_id = C0456b.f2467p.getString("user_id", null);
-    private static List<BaseItem> mMenu = new ArrayList<>();
-
-    void dataadd() {
-        {
-
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            RestClient rc=new RestClient();
-            String url="http://teasuttaapi.yousoftech.com/API/get_category.php";
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
-                    url,null,
-                    new com.android.volley.Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.d("RESPONSE", response.toString());
-                            String status= null;
-                            try {
-                                status = response.getString("status");
-
-                                if(status.contains("failed"))
-                                {
-                                    Log.d("search",status.toString());
-                                }
-                                else if(status.contains("success")){
-
-                                    JSONArray jsonArray=response.getJSONArray("category");
-                                    for(int i=0;i<jsonArray.length();i++)
-                                    {
-                                        JSONObject obj=jsonArray.getJSONObject(i);
-                                        listcat1.add(new Item(obj.getString("cat_name"),obj.getString("cat_id")));
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new com.android.volley.Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    Log.d("RESPONSE", "That didn't work!");
-                }
-            });
-            request.setRetryPolicy(new DefaultRetryPolicy(
-                    0,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            requestQueue.add(request);
-        }
 
 
-    }
 
 
-    public static List<BaseItem> getInitialItems() {
+
+    public static List<BaseItem> getInitialItems(String id) {
         //return getSubItems(new GroupItem("root"));
 
         List<BaseItem> rootMenu = new ArrayList<>();
@@ -112,17 +69,33 @@ public class CustomDataProvider {
         * ITEM = TANPA CHILD
         * GROUPITEM = DENGAN CHILD
         * */
-        rootMenu.add(new Item("Home","0"));
-        rootMenu.add(new GroupItem("Category","10"));
-        rootMenu.add(new Item("My Cart","1"));
-        //rootMenu.add(new GroupItem("KATEGORI","101"));
-        rootMenu.add(new Item("My Order","2"));
-        rootMenu.add(new Item("My Profile","3"));
-        rootMenu.add(new Item("Change Password","4"));
-        rootMenu.add(new Item("Share","5"));
-        rootMenu.add(new Item("Customer Service","6"));
+        if(id.equals("1")){
+            rootMenu.add(new Item("Login","9"));
+            rootMenu.add(new Item("Home","0"));
+            rootMenu.add(new GroupItem("Category","10"));
+            rootMenu.add(new Item("Share","5"));
+            rootMenu.add(new Item("Customer Service","6"));
+        }
+        else{
+            rootMenu.add(new Item("Home","0"));
+            rootMenu.add(new GroupItem("Category","10"));
+
+            rootMenu.add(new Item("My Cart","1"));
+            //rootMenu.add(new GroupItem("KATEGORI","101"));
+            rootMenu.add(new Item("My Order","2"));
+            rootMenu.add(new Item("My Profile","3"));
+            rootMenu.add(new Item("Change Password","4"));
+            rootMenu.add(new Item("Share","5"));
+            rootMenu.add(new Item("Customer Service","6"));
+            rootMenu.add(new Item("Logout","8"));
+
+        }
+
+
         //rootMenu.add(new Item("About","7"));
-        rootMenu.add(new Item("Logout","8"));
+
+
+
 
         return rootMenu;
     }

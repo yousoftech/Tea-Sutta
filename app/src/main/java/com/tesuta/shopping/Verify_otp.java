@@ -51,13 +51,13 @@ public class Verify_otp extends AppCompatActivity implements View.OnClickListene
         btn_verifyotp = (Button) findViewById(R.id.btn_verifyotp);
         btn_verifyotp.setOnClickListener(this);
         startTimer();
-        SmsReceiver.bindListener(new SmsListener() {
+       /* SmsReceiver.bindListener(new SmsListener() {
             @Override
             public void messageReceived(String messageText) {
                 String s2 = messageText.substring(0,6);
                 edt_verifyotp.setText(s2);
             }
-        });
+        });*/
         btn_resend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

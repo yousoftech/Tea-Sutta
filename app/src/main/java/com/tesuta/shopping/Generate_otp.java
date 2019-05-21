@@ -48,13 +48,9 @@ public class Generate_otp extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_generateotp:
-                if(isStoragePermissionGranted())
-                {
+
                     sendotp();
-                }else
-                {
-                    isStoragePermissionGranted();
-                }
+
                 break;
         }
     }

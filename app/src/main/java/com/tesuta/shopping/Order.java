@@ -48,6 +48,8 @@ public class Order extends Fragment {
     RecyclerAdapter1 adapter2;
     private ArrayList<MobileOS1> mobileOSes = new ArrayList<>();
     Button start_shopping;
+
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

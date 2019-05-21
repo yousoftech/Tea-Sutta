@@ -3,64 +3,92 @@
     package="com.tesuta">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
-        android:name="com.tesuta.shopping.C0456b"
+        android:name=".shopping.C0456b"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/h_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/h_logo"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
+
+        <receiver
+            android:name=".service.FirebaseDataReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".service.MyFirebaseMessageService"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.FirebaseIDService"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <activity android:name=".delivary.Deliveryorderdetails" />
+        <activity android:name=".delivary.MainActivity" />
         <activity
-            android:name="com.tesuta.shopping.Master_Home"
+            android:name=".shopping.Master_Home"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Login"
+            android:name=".shopping.Login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Generate_otp"
+            android:name=".shopping.Generate_otp"
             android:label="Generate OTP"
-            android:parentActivityName="com.tesuta.shopping.Login"
+            android:parentActivityName=".shopping.Login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Verify_otp"
+            android:name=".shopping.Verify_otp"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Register"
+            android:name=".shopping.Register"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Forgot_Password"
+            android:name=".shopping.Forgot_Password"
             android:label="Forgot Password"
-            android:parentActivityName="com.tesuta.shopping.Login"
+            android:parentActivityName=".shopping.Login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Update_password"
+            android:name=".shopping.Update_password"
             android:label="Update Password"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Check"
+            android:name=".shopping.Check"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -70,67 +98,69 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.tesuta.shopping.Profile"
+            android:name=".shopping.Profile"
             android:label="Profile"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Product_details"
+            android:name=".shopping.Product_details"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Product"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:name=".shopping.Product"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Cart"
+            android:name=".shopping.Cart"
             android:label="My Cart"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.tesuta.shopping.Query"
+            android:name=".shopping.Query"
             android:label="Query"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Order_details"
+            android:name=".shopping.Order_details"
             android:label="Order Details"
-            android:parentActivityName="com.tesuta.shopping.Master_Home" />
-        <activity android:name="com.tesuta.shopping.Splash_activity" />
+            android:parentActivityName=".shopping.Master_Home" />
+        <activity android:name=".shopping.Splash_activity" />
         <activity
-            android:name="com.tesuta.shopping.About"
+            android:name=".shopping.About"
             android:label="About"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName="com.tesuta.shopping.Master_Home" />
+            android:parentActivityName=".shopping.Master_Home"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tesuta.shopping.Searchactivity"
+            android:name=".shopping.Searchactivity"
             android:label="Search"
-            android:parentActivityName="com.tesuta.shopping.Master_Home"
+            android:parentActivityName=".shopping.Master_Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tesuta.shopping.Checkout"
-            android:parentActivityName="com.tesuta.shopping.Cart"
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/h_logo" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <activity
+            android:name=".shopping.Checkout"
+            android:label="Confirm address"
+            android:parentActivityName=".shopping.Cart"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:label="Confirm address"></activity>
-
-        <receiver
-            android:name="com.tesuta.shopping.SmsReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="214783647">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 

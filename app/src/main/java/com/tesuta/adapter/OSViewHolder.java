@@ -13,9 +13,6 @@ import com.squareup.picasso.Picasso;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
-/**
- * Created by Nilay on 10/18/2017.
- */
 
 public class OSViewHolder extends GroupViewHolder    {
 
@@ -79,7 +76,7 @@ public class OSViewHolder extends GroupViewHolder    {
          try
          {
               Picasso.with(itemView.getContext()).load(seperatr_data[3]).into(h_e_image);
-              Log.d("fgh",seperatr_data[3]);
+
          }
          catch (Exception e)
          {

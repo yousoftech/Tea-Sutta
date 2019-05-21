@@ -1,8 +1,10 @@
 package com.tesuta.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -17,16 +19,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.tesuta.R;
 import com.tesuta.models.AllProductDetailsList;
+import com.tesuta.models.AllProductImage;
 import com.tesuta.models.AllProductUnitDetailsList;
+import com.tesuta.models.UserAddCart;
 import com.tesuta.models.UserAddProductCart;
 import com.tesuta.models.UserMinusProductCart;
-import com.tesuta.R;
-import com.tesuta.models.UserAddCart;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
+import com.tesuta.shopping.Cart;
+import com.tesuta.shopping.Login;
 import com.tesuta.shopping.Product_details;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +43,23 @@ import retrofit.Response;
 
 public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProductDetailAdapter.GmailVH> {
     Context context;
-     String user_id;
+    String user_id;
     List<AllProductDetailsList> getAllProductLists;
     List<AllProductUnitDetailsList> getAllProductUnitLists;
+    List<AllProductImage> getallimage;
+    imgadapter imgadapter;
     ArrayList<String> list = new ArrayList<>();
     ArrayList<String> listItems=new ArrayList<>();
     ArrayAdapter<String> adapter1;
     String pro_id,pro_name;
     TextView[] myTextViews;
     int qty=0,ich=0;
-    public SelectProductDetailAdapter(Context context,List<AllProductDetailsList> getAllProductLists,List<AllProductUnitDetailsList> getAllProductUnitLists,String pro_id,String pro_name) {
+    public SelectProductDetailAdapter(Context context,List<AllProductDetailsList> getAllProductLists,List<AllProductUnitDetailsList> getAllProductUnitLists,List<AllProductImage> getallimage,String pro_id,String pro_name) {
         this.context = context;
         this.pro_id=pro_id;
         this.pro_name=pro_name;
         this.getAllProductLists = getAllProductLists;
+        this.getallimage=getallimage;
         this.getAllProductUnitLists = getAllProductUnitLists;
 
     }
@@ -68,22 +76,36 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
         //  gmailVH.title.setText("Sample Test");
 
         final Resources res = context.getResources();
-      //  String text2 = String.format(res.getString(R.string.txt_message22), "Examiner", "58 Posts", "Rs. 9300-34800/- grade Pay: Rs .4600/-", "Degree in law", "30 Years", "2016-03-31");
-        String text1 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_id());
-        String text3 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_offer());
-        String text4 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_actualcost());
-        String text5 = String.format(res.getString(R.string.txt_message223),getAllProductLists.get(i).getPro_offercost());
-        String text6 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_name());
-        String text7 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_unit());
-        String text8 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_rating());
-        String text9 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_description());
-        String text10 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_features());
-        String text11 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_disclaimer());
-        String text12 = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getPro_store());
-        String qtychk = String.format(res.getString(R.string.txt_message223), getAllProductLists.get(i).getQtyadd());
+        //  String text2 = String.format(res.getString(R.string.txt_message22), "Examiner", "58 Posts", "Rs. 9300-34800/- grade Pay: Rs .4600/-", "Degree in law", "30 Years", "2016-03-31");
+        String text1 =  getAllProductLists.get(i).getPro_id();
+user_id=getAllProductLists.get(i).getUser_id();
+        String text3 =  getAllProductLists.get(i).getPro_offer();
+        String text4 =  getAllProductLists.get(i).getPro_actualcost();
+        String text5 = getAllProductLists.get(i).getPro_offercost();
+        String text6 =  getAllProductLists.get(i).getPro_name();
+        String text7 =  getAllProductLists.get(i).getPro_unit();
+        String text8 =  getAllProductLists.get(i).getPro_rating();
+        String text9 =  getAllProductLists.get(i).getPro_description();
+        String text10 =  getAllProductLists.get(i).getPro_features();
+        String text11 =  getAllProductLists.get(i).getPro_disclaimer();
+        String text12 =  getAllProductLists.get(i).getPro_store();
+        String qtychk =  getAllProductLists.get(i).getQtyadd();
+
         gmailVH.qtycheck.setText(qtychk);
 
-        String cartval=String.format(res.getString(R.string.txt_message223),getAllProductLists.get(i).getCart_val());
+        if(getallimage.isEmpty())
+        {
+            gmailVH.imgall.setVisibility(View.GONE);
+        }
+        else
+        {
+            gmailVH.imgall.setVisibility(View.VISIBLE);
+            imgadapter=new imgadapter(context,getallimage,gmailVH.p_image);
+            gmailVH.imgall.setAdapter(imgadapter);
+            gmailVH.imgall.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
+        }
+
+        String cartval=getAllProductLists.get(i).getCart_val();
         qty= Integer.parseInt(cartval);
 
         gmailVH.c_plus.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +114,7 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
 
 
                 String l=gmailVH.qtycheck.getText().toString();
-                if (Integer.parseInt(l) > Integer.parseInt(String.format(res.getString(R.string.txt_message223),getAllProductLists.get(i).getCart_val()))) {
+                if (Integer.parseInt(l) > Integer.parseInt(getAllProductLists.get(i).getCart_val())) {
                     userproductadd(gmailVH,Config.mem_string,getAllProductLists.get(i).getUser_id(),getAllProductLists.get(i).getPro_id(), gmailVH.odetest.getText().toString(),getAllProductUnitLists.get(i).getTpd_id());
                 } else {
                     Toast.makeText(context, "Can not add quantity more than " + l, Toast.LENGTH_SHORT).show();
@@ -130,11 +152,11 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
 
         gmailVH.p_store.setText(text12);
         gmailVH.p_star.setText(text8);
-      //  gmailVH.p_offer.setText(text3);
+        //  gmailVH.p_offer.setText(text3);
         gmailVH.p_name.setText(text6);
-      //   gmailVH.p_actual_cost.setText(text4);
-      //  gmailVH.p_offer_cost.setText(text5);
-      //   gmailVH.p_unit.setText(text7);
+        //   gmailVH.p_actual_cost.setText(text4);
+        //  gmailVH.p_offer_cost.setText(text5);
+        //   gmailVH.p_unit.setText(text7);
         gmailVH.p_description.setText(Html.fromHtml(text9));
         gmailVH.p_features.setText(Html.fromHtml(text10));
         gmailVH.p_disclaimer.setText(Html.fromHtml(text11));
@@ -192,7 +214,7 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
         for (int j=0;j<getAllProductUnitLists.size();j++)
         {
             list.add(getAllProductUnitLists.get(j).getTpd_unit());
-            gmailVH.p_actual_cost.setText(getAllProductUnitLists.get(j).getTpd_actual_cost());
+            gmailVH.p_actual_cost.setText(getAllProductUnitLists.get(j).getTpd_offer_cost());
             gmailVH.p_offer_cost.setText(getAllProductUnitLists.get(j).getTpd_offer_cost());
             gmailVH.p_offer.setText(getAllProductUnitLists.get(j).getTpd_offer());
             String tpdofr=getAllProductUnitLists.get(j).getTpd_offer();
@@ -201,7 +223,7 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
                 gmailVH.l2.setVisibility(View.INVISIBLE);
             }
             gmailVH.h_p_unit.setText(getAllProductUnitLists.get(j).getTpd_unit());
-                if(getAllProductUnitLists.get(j).getTpd_image()!=null) {
+            if(getAllProductUnitLists.get(j).getTpd_image()!=null) {
                 try {
                     Picasso.with(context).load(getAllProductUnitLists.get(j).getTpd_image()).into(gmailVH.p_image);
                 } catch (Exception e) {
@@ -246,7 +268,7 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
                     product_unit_id= String.valueOf(unittext.getId());
                     for(int p=0;p<getAllProductUnitLists.size();p++) {
                         if(getAllProductUnitLists.get(p).getTpd_id().equals(product_unit_id)) {
-                            gmailVH.p_actual_cost.setText(getAllProductUnitLists.get(p).getTpd_actual_cost());
+                            gmailVH.p_actual_cost.setText(getAllProductUnitLists.get(p).getTpd_offer_cost());
                             gmailVH.p_offer_cost.setText(getAllProductUnitLists.get(p).getTpd_offer_cost());
                             gmailVH.p_offer.setText(getAllProductUnitLists.get(p).getTpd_offer());
                             String tpdofr=getAllProductUnitLists.get(p).getTpd_offer();
@@ -282,14 +304,38 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
             @Override
             public void onClick(View view) {
 
-                String l=gmailVH.qtycheck.getText().toString();
-                if (Integer.parseInt(l) > Integer.parseInt(String.format(res.getString(R.string.txt_message223),getAllProductLists.get(i).getCart_val()))) {
-                    addtocart(gmailVH,Config.mem_string, getAllProductLists.get(i).getUser_id(),getAllProductLists.get(i).getPro_id(),product_unit_id);
+                if(user_id.equals("1")){
+                    Toast.makeText(context, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1=new Intent(context, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(i1);
+                }
+                else{
+                String l = gmailVH.qtycheck.getText().toString();
+                if (Integer.parseInt(l) > Integer.parseInt( getAllProductLists.get(i).getCart_val())) {
+                    addtocart(gmailVH, Config.mem_string, getAllProductLists.get(i).getUser_id(), getAllProductLists.get(i).getPro_id(), product_unit_id);
                 } else {
                     Toast.makeText(context, "Can not add quantity more than " + l, Toast.LENGTH_SHORT).show();
                 }
             }
+            }
         });
+        if(Integer.parseInt(gmailVH.c_quantity.getText().toString())>0)
+        {
+        String t = String.valueOf(Double.parseDouble( gmailVH.p_actual_cost.getText().toString()) * Integer.parseInt(gmailVH.c_quantity.getText().toString()));
+        gmailVH.p_offer_cost.setText(t);
+        }
+        if(Integer.parseInt(getAllProductLists.get(i).getCart_val())>0)
+        {
+            double ac=Double.parseDouble( gmailVH.p_actual_cost.getText().toString());
+            int ctv=Integer.parseInt(getAllProductLists.get(i).getCart_val());
+            double ttc=ac+ctv;
+            String t = String.valueOf(Double.parseDouble( gmailVH.p_actual_cost.getText().toString()) * Integer.parseInt(getAllProductLists.get(i).getCart_val()));
+            gmailVH.p_offer_cost.setText(t);
+        }
+        else{
+            gmailVH.p_offer_cost.setText(gmailVH.p_actual_cost.getText().toString());
+        }
 
     }
 
@@ -312,6 +358,7 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
                         gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
                         TextView txtcart=((Product_details)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+                        gmailVH.p_offer_cost.setText(String.valueOf(String.valueOf(Double.parseDouble(gmailVH.p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString()))));
                     }
                     else
                     {
@@ -360,6 +407,10 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
                             i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             i1.putExtra("pro_name",pro_name);
                             context.startActivity(i1);*/
+                        }
+                        else {
+                            String t = String.valueOf(Double.parseDouble(gmailVH.p_actual_cost.getText().toString()) * Integer.parseInt(gmailVH.c_quantity.getText().toString()));
+                            gmailVH.p_offer_cost.setText(t);
                         }
                     }
                     else
@@ -417,9 +468,9 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
 
 
 
-                   //     Intent i1 = new Intent(context.getApplicationContext(),Master_Home.class);
-                  //      context.startActivity(i1);
-                  //      ((Master_Home)context).finish();
+                        //     Intent i1 = new Intent(context.getApplicationContext(),Master_Home.class);
+                        //      context.startActivity(i1);
+                        //      ((Master_Home)context).finish();
                     }
                     else
                     {
@@ -445,15 +496,15 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
         return getAllProductLists == null ? 0 : getAllProductLists.size();
     }
 
-     static class GmailVH extends RecyclerView.ViewHolder  {
+    static class GmailVH extends RecyclerView.ViewHolder  {
         TextView p_store;
         TextView p_star;
         TextView p_offer;
         TextView p_name;
         TextView p_actual_cost;
         TextView p_offer_cost;
-      //  TextView p_unit;
-
+        //  TextView p_unit;
+        RecyclerView imgall;
         TextView p_description;
         TextView p_features;
         TextView p_disclaimer;
@@ -463,18 +514,19 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
         TextView c_quantity;
         Button c_minus,c_plus;
         LinearLayout cartadd_min;
-         RelativeLayout rel;
-         RelativeLayout unitlin;
-         ImageView unitarrow;
-         LinearLayout unitlinear,l2;
-         TextView h_p_unit,txtich,qtycheck,odetest;
+        RelativeLayout rel;
+        RelativeLayout unitlin;
+        ImageView unitarrow;
+        LinearLayout unitlinear,l2;
+        TextView h_p_unit,txtich,qtycheck,odetest;
 
 
 
 
-         public GmailVH(View itemView) {
+        public GmailVH(View itemView) {
             super(itemView);
 
+            imgall=(RecyclerView)itemView.findViewById(R.id.imgall);
             cartadd_min=(LinearLayout)itemView.findViewById(R.id.cartadd_min);
             c_minus=(Button)itemView.findViewById(R.id.c_minus);
             c_plus=(Button)itemView.findViewById(R.id.c_plus);
@@ -491,15 +543,15 @@ public class SelectProductDetailAdapter extends RecyclerView.Adapter<SelectProdu
             p_disclaimer = (TextView) itemView.findViewById(R.id.p_disclaimer);
             h_p_unit = (TextView) itemView.findViewById(R.id.h_p_unit);
             p_add = (Button) itemView.findViewById(R.id.p_add);
-             odetest = (TextView) itemView.findViewById(R.id.odeidtest);
+            odetest = (TextView) itemView.findViewById(R.id.odeidtest);
             rel=(RelativeLayout)itemView.findViewById(R.id.rel);
             unitlinear=(LinearLayout) itemView.findViewById(R.id.unitLinear);
             unitarrow=(ImageView)itemView.findViewById(R.id.unitarrow);
             unitlin=(RelativeLayout)itemView.findViewById(R.id.h_p_unitlin);
-          //  spinner1 = (Spinner) itemView.findViewById(R.id.spinner1);
-             txtich=(TextView)itemView.findViewById(R.id.ich);
-             qtycheck=(TextView)itemView.findViewById(R.id.qtycheck);
-             l2=(LinearLayout)itemView.findViewById(R.id.l2);
+            //  spinner1 = (Spinner) itemView.findViewById(R.id.spinner1);
+            txtich=(TextView)itemView.findViewById(R.id.ich);
+            qtycheck=(TextView)itemView.findViewById(R.id.qtycheck);
+            l2=(LinearLayout)itemView.findViewById(R.id.l2);
 
         }
     }

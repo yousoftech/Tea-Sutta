@@ -3,6 +3,7 @@ package com.tesuta.shopping;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.tesuta.R;
 import com.tesuta.adapter.SelectProductDetailAdapter;
 import com.tesuta.models.AllCart;
 import com.tesuta.models.AllCartProduct;
 import com.tesuta.models.AllProductDetailsList;
+import com.tesuta.models.AllProductImage;
 import com.tesuta.models.AllProductUnitDetailsList;
 import com.tesuta.models.ProductDetails;
 import com.tesuta.rest.Config;
@@ -34,19 +38,29 @@ import retrofit.Response;
 public class Product_details extends AppCompatActivity {
 
     String user_id,pro_id,pro_name;
-    TextView  empty_view;
+    TextView empty_view;
     RecyclerView recyclerView;
     TextView textCartItemCount;
     int mCartItemCount=0;
     List<AllCartProduct> getallCartProductLists = new ArrayList<>();
     SelectProductDetailAdapter adapter;
     List<AllProductDetailsList> getallHomeAllProductLists = new ArrayList<>();
+    List<AllProductImage> getallimg=new ArrayList<>();
     List<AllProductUnitDetailsList> getallHomeAllProductUnitLists = new ArrayList<>();
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         Intent i1 = getIntent();
         pro_id = i1.getStringExtra("pro_id");
@@ -63,7 +77,7 @@ public class Product_details extends AppCompatActivity {
         empty_view = (TextView) findViewById(R.id.empty_view);
 
         if (adapter == null) {
-            adapter = new SelectProductDetailAdapter(Product_details.this,getallHomeAllProductLists,getallHomeAllProductUnitLists,pro_id,pro_name);
+            adapter = new SelectProductDetailAdapter(Product_details.this,getallHomeAllProductLists,getallHomeAllProductUnitLists,getallimg,pro_id,pro_name);
             recyclerView.setAdapter(adapter);
         }
 
@@ -108,9 +122,17 @@ public class Product_details extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cart) {
-            Intent i1 = new Intent(
-                    Product_details.this,Cart.class);
-            startActivity(i1);
+            if(user_id.equals("1")){
+                Toast.makeText(Product_details.this, "Please Login First", Toast.LENGTH_LONG).show();
+                Intent i1=new Intent(Product_details.this, Login.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i1);
+            }
+            else {
+                Intent i1 = new Intent(
+                        Product_details.this, Cart.class);
+                startActivity(i1);
+            }
         }
         if (id == R.id.action_search) {
             Intent i1 = new Intent(Product_details.this,Searchactivity.class);
@@ -155,9 +177,9 @@ public class Product_details extends AppCompatActivity {
                                         AllCartProduct jo = result.getProduct().get(i);
                                         qty= qty+Integer.parseInt(jo.getOde_quantity());
                                     }
-                                        int a = qty;
-                                        mCartItemCount = a;
-                                        textCartItemCount.setText(a + "");
+                                    int a = qty;
+                                    mCartItemCount = a;
+                                    textCartItemCount.setText(a + "");
 
                                 }
                             } else {
@@ -204,6 +226,8 @@ public class Product_details extends AppCompatActivity {
                                 getallHomeAllProductLists.addAll(result.getData());
                                 getallHomeAllProductUnitLists.clear();
                                 getallHomeAllProductUnitLists.addAll(result.getProduct_data());
+                                getallimg.clear();
+                                getallimg.addAll(result.getProduct_img());
                                 adapter.notifyDataSetChanged();
 
                                 if (getallHomeAllProductLists.isEmpty()) {

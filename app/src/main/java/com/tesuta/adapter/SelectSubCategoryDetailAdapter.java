@@ -2,6 +2,7 @@ package com.tesuta.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -28,6 +29,7 @@ import com.tesuta.R;
 import com.tesuta.models.UserAddCart;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
+import com.tesuta.shopping.Login;
 import com.tesuta.shopping.Product;
 import com.squareup.picasso.Picasso;
 
@@ -100,7 +102,7 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
         }
         gmailVH.qtycheck.setText(qtychk);
         gmailVH.txt_description.setText(Html.fromHtml(text7));
-        gmailVH.h_p_actual_cost.setText(Html.fromHtml(text10));
+        gmailVH.h_p_actual_cost.setText(Html.fromHtml(text9));
         gmailVH.h_p_offer_cost.setText(Html.fromHtml(text9));
         gmailVH.h_p_offer.setText(Html.fromHtml(text8));
         gmailVH.h_p_unit.setText(Html.fromHtml(text11));
@@ -170,8 +172,6 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
 
 
 
-
-
         try
         {
             Picasso.with(context).load(getAllProductLists.get(i).getPro_image()).into(gmailVH.h_p_image);
@@ -205,7 +205,7 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
             gmailVH.txtich.setText(String.valueOf(ich));
             unittext.setText(pro_unit.get(j).getTpd_unit());
             unittext.setBackgroundResource(R.drawable.edittext8);
-            gmailVH.h_p_actual_cost.setText(pro_unit.get(j).getTpd_actual_cost());
+            gmailVH.h_p_actual_cost.setText(pro_unit.get(j).getTpd_offer_cost());
             gmailVH.h_p_offer.setText(pro_unit.get(j).getTpd_offer());
             gmailVH.h_p_offer_cost.setText(pro_unit.get(j).getTpd_offer_cost());
             ode_id1=pro_unit.get(j).getOde_id();
@@ -233,6 +233,11 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                 gmailVH.h_p_add.setVisibility(View.INVISIBLE);
                 gmailVH.c_quantity.setText(cartval1);
                 ode_id1=pro_unit.get(j).getOde_id();
+                double ac=Double.parseDouble( gmailVH.h_p_actual_cost.getText().toString());
+                int ctv=Integer.parseInt(cartval1);
+                double ttc=ac+ctv;
+                String t = String.valueOf(Double.parseDouble( getAllProductLists.get(i).getPro_offercost()) * Integer.parseInt(cartval1));
+                gmailVH.h_p_offer_cost.setText(t);
             }
             else
             {
@@ -254,7 +259,7 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                      if(pro_unit.get(p).getTpd_id().equals(tpd_id)) {
 
                          gmailVH.test1.setText(pro_unit.get(p).getOde_id());
-                         gmailVH.h_p_actual_cost.setText(pro_unit.get(p).getTpd_actual_cost());
+                         gmailVH.h_p_actual_cost.setText(pro_unit.get(p).getTpd_offer_cost());
                          gmailVH.h_p_offer_cost.setText(pro_unit.get(p).getTpd_offer_cost());
                          gmailVH.h_p_offer.setText(pro_unit.get(p).getTpd_offer());
                          gmailVH.h_p_unit.setText(unittext.getText().toString());
@@ -262,15 +267,23 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                          gmailVH.test2.setText(pro_unit.get(p).getCart_val());
                          String cartval1=String.format(pro_unit.get(p).getCart_val());
                          qty= Integer.parseInt(cartval1);
+
+                         if(Integer.parseInt(gmailVH.c_quantity.getText().toString())>0)
+                         {
+
+                         }
+
                          if(Integer.parseInt(cartval1)>0)
                          {
                              gmailVH.cartadd_min.setVisibility(View.VISIBLE);
                              gmailVH.h_p_add.setVisibility(View.INVISIBLE);
                              gmailVH.c_quantity.setText(cartval1);
                              ode_id1=pro_unit.get(p).getOde_id();
+
                          }
                          else
                          {
+
                              gmailVH.cartadd_min.setVisibility(View.INVISIBLE);
                              gmailVH.h_p_add.setVisibility(View.VISIBLE);
                          }
@@ -310,11 +323,18 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
 
                 //Toast.makeText(context, gmailVH.test.getText().toString(), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(context, gmailVH.test1.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                addtocart(gmailVH,Config.mem_string, getAllProductLists.get(i).getUser_id(),getAllProductLists.get(i).getPro_id(),gmailVH.test.getText().toString());
-
+                if(getAllProductLists.get(i).getUser_id().equals("1")){
+                    Toast.makeText(context, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1=new Intent(context, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(i1);
+                }
+                else {
+                    addtocart(gmailVH, Config.mem_string, getAllProductLists.get(i).getUser_id(), getAllProductLists.get(i).getPro_id(), gmailVH.test.getText().toString());
+                }
             }
         });
+
 
 
     }
@@ -339,6 +359,8 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                         gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
                         txtcart=((Product)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+
+                        gmailVH.h_p_offer_cost.setText(String.valueOf(String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString()))));
                     }
                     else
                     {
@@ -377,9 +399,14 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                         gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl) - 1));
                         txtcart=((Product)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())-1));
+
                         if (gmailVH.c_quantity.getText().toString().equals("0")) {
                             gmailVH.h_p_add.setVisibility(View.VISIBLE);
                             gmailVH.cartadd_min.setVisibility(View.GONE);
+                        }
+                        else{
+                        String t=String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString()));
+                        gmailVH.h_p_offer_cost.setText(t);
                         }
                     } else {
                         Toast.makeText(context, "Plz TRY again Later", Toast.LENGTH_SHORT).show();
@@ -424,6 +451,10 @@ public class SelectSubCategoryDetailAdapter extends RecyclerView.Adapter<SelectS
                         gmailVH.test2.setText(String.valueOf(intpls));
                         txtcart=((Product)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+                        /*String str=gmailVH.h_p_offer_cost.getText().toString();
+                        String p[]=str.split(".");
+                        int t=Integer.parseInt(gmailVH.c_quantity.getText().toString())*Integer.parseInt(p[0]);
+                        gmailVH.h_p_offer_cost.setText(String.valueOf(t));*/
                        // gmailVH.test2.setText("1");
 
                        // Intent i1 = new Intent(context.getApplicationContext(),Master_Home.class);

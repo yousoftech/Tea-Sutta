@@ -152,7 +152,8 @@ public class Checkout extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent i1 = new Intent(Checkout.this,Order_details.class);
-                                        i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        //i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        i1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(i1);
                                         finish();
                                     }

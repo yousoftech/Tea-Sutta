@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +27,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tesuta.R;
 import com.tesuta.data.BaseItem;
 import com.tesuta.data.CustomDataProvider;
 import com.tesuta.models.AllCart;
 import com.tesuta.models.AllCartProduct;
+import com.tesuta.models.UserLogin;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
 import com.tesuta.views.LevelBeamView;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import org.json.JSONObject;
 
@@ -48,38 +52,44 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 
-public class Master_Home extends AppCompatActivity
-       {
+public class Master_Home extends AppCompatActivity {
 
-    String user_info,user_address,user_id;
+    String user_info, user_address, user_id;
     private boolean doubleBackToExitPressedOnce = false;
-    TextView h_name,h_contact,h_address,h_city;
+    TextView h_name, h_contact, h_address, h_city;
     TextView textCartItemCount;
     List<?> list;
-    public  View fview,fview1;
-    public boolean viewchk,viewchk1;
-    JSONObject resobj=null;
-    public int color,color1;
+    public View fview, fview1;
+    public boolean viewchk, viewchk1;
+    JSONObject resobj = null;
+    public int color, color1;
 
 
-           int mCartItemCount=0;
-    int count=0;
+    int mCartItemCount = 0;
+    int count = 0;
     private MultiLevelListView multiLevelListView;
     List<AllCartProduct> getallCartProductLists = new ArrayList<>();
 
     UserSelectedItemCart returnCartItems = new UserSelectedItemCart();
 
-           // int mCartItemCount=returnCartItems.callCartData();
+    // int mCartItemCount=returnCartItems.callCartData();
 
 
    /* public Master_Home(int no) {
         textCartItemCount.setText( no + "" );
     }*/
 
-   public Master_Home()
-   {
-       //resobj=dataadd();
-   }
+    public Master_Home() {
+        //resobj=dataadd();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Toast.makeText(this, "this is "+user_id, Toast.LENGTH_SHORT).show();
+        // CustomDataProvider customDataProvider=new CustomDataProvider(this,"1");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,17 +97,14 @@ public class Master_Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CustomDataProvider customDataProvider=new CustomDataProvider(this);
-        C0456b.f2467p1 = getSharedPreferences(C0456b.f2907a1,0);
-        C0456b.f2467p2 = getSharedPreferences(C0456b.f2907a2,0);
-        C0456b.f2467p = getSharedPreferences(C0456b.f2907a,0);
-        user_id = C0456b.f2467p.getString("user_id",null);
+        String token= FirebaseInstanceId.getInstance().getToken();
+        C0456b.f2467p1 = getSharedPreferences(C0456b.f2907a1, 0);
+        C0456b.f2467p2 = getSharedPreferences(C0456b.f2907a2, 0);
+        C0456b.f2467p = getSharedPreferences(C0456b.f2907a, 0);
+        user_id = C0456b.f2467p.getString("user_id", null);
 
-        user_info = C0456b.f2467p1.getString("user_info",null);
-        user_address = C0456b.f2467p2.getString("user_address",null);
-
-
-
+        user_info = C0456b.f2467p1.getString("user_info", null);
+        user_address = C0456b.f2467p2.getString("user_address", null);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -111,25 +118,21 @@ public class Master_Home extends AppCompatActivity
         //navigationView.setNavigationItemSelectedListener(Master_Home.this);
 
 
-
-        View hView =  navigationView.getRootView();
+        View hView = navigationView.getRootView();
         h_name = (TextView) hView.findViewById(R.id.h_name);
         h_contact = (TextView) hView.findViewById(R.id.h_contact);
         h_address = (TextView) hView.findViewById(R.id.h_address);
         h_city = (TextView) hView.findViewById(R.id.h_city);
 
-        try
-        {
+        try {
             String user_name[] = user_info.split(",");
             String user_location[] = user_address.split(",");
 
             h_name.setText(user_name[0]);
             h_contact.setText(user_name[1]);
-            h_address.setText(user_location[0]+","+user_location[1]);
+            h_address.setText(user_location[0] + "," + user_location[1]);
             h_city.setText(user_location[2]);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
 
@@ -188,7 +191,7 @@ public class Master_Home extends AppCompatActivity
 
                 @Override
                 public void run() {
-                    doubleBackToExitPressedOnce=false;
+                    doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
         }
@@ -202,17 +205,16 @@ public class Master_Home extends AppCompatActivity
         final MenuItem menuItem = menu.findItem(R.id.action_cart);
 
         View actionView = MenuItemCompat.getActionView(menuItem);
-        LayoutInflater inflater= LayoutInflater.from( getBaseContext() );
-        View countq =menu.findItem( R.id.action_cart ).getActionView();
-        textCartItemCount = (TextView)countq.findViewById( R.id.cart_badge );
-        callCartData( user_id );
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        View countq = menu.findItem(R.id.action_cart).getActionView();
+        textCartItemCount = (TextView) countq.findViewById(R.id.cart_badge);
+        callCartData(user_id);
 
         // textCartItemCount.setText( "400" );
-        View view = inflater.inflate(R.layout.custon_action_item_layout,null);
+        View view = inflater.inflate(R.layout.custon_action_item_layout, null);
 
 
-
-      // setupBadge();
+        // setupBadge();
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,7 +247,7 @@ public class Master_Home extends AppCompatActivity
 
     }*/
 
- @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -254,43 +256,47 @@ public class Master_Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cart) {
-            Intent i1 = new Intent(
-                    Master_Home.this,Cart.class);
-            startActivity(i1);
+            if (user_id.equals("1")) {
+                Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                Intent i1 = new Intent(Master_Home.this, Login.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i1);
+            } else {
+                Intent i1 = new Intent(
+                        Master_Home.this, Cart.class);
+                startActivity(i1);
+            }
         }
         if (id == R.id.action_search) {
-            Intent i1 = new Intent(Master_Home.this,Searchactivity.class);
+            Intent i1 = new Intent(Master_Home.this, Searchactivity.class);
             startActivity(i1);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-           private void confMenu() {
-               multiLevelListView = (MultiLevelListView) findViewById(R.id.multiLevelMenu);
-               // custom ListAdapter
-               ListAdapter listAdapter;
-               listAdapter = new ListAdapter();
-               multiLevelListView.setAdapter(listAdapter);
-               multiLevelListView.setOnItemClickListener(mOnItemClickListener);
-               listAdapter.setDataItems(CustomDataProvider.getInitialItems());
-           }
+    private void confMenu() {
+
+        multiLevelListView = (MultiLevelListView) findViewById(R.id.multiLevelMenu);
+        // custom ListAdapter
+        ListAdapter listAdapter;
+        listAdapter = new ListAdapter();
+        multiLevelListView.setAdapter(listAdapter);
+        multiLevelListView.setOnItemClickListener(mOnItemClickListener);
+        listAdapter.setDataItems(CustomDataProvider.getInitialItems(user_id));
+    }
 
 
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
 
-
-
-
-           private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-
-               private void showItemDescription(Object object, ItemInfo itemInfo) {
+        private void showItemDescription(Object object, ItemInfo itemInfo) {
                   /* StringBuilder builder = new StringBuilder("\"");
                    builder.append(((BaseItem) object).getName());
                    builder.append("\" clicked!\n");
                    builder.append(getItemInfoDsc(itemInfo));*/
-                   String select=((BaseItem) object).getName();
-                   String id=((BaseItem)object).getId();
-                   //Toast.makeText(Master_Home.this, builder.toString(), Toast.LENGTH_SHORT).show();
+            String select = ((BaseItem) object).getName();
+            String id = ((BaseItem) object).getId();
+            //Toast.makeText(Master_Home.this, builder.toString(), Toast.LENGTH_SHORT).show();
 
 /*
                    if(viewchk==true)
@@ -304,284 +310,101 @@ public class Master_Home extends AppCompatActivity
                    viewchk=true;
                    fview=view;*/
 
-                   if (select.equals("Home")) {
-                       Fragment selectedFragment = null;
-                       selectedFragment = Home.newInstance();
-                       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                       transaction.replace(R.id.content, selectedFragment);
-                       transaction.commit();
-                   } else if (select.equals("My Order")) {
-                       Intent i1 = new Intent(Master_Home.this,Order_details.class);
-                       startActivity(i1);
-                   }
-                   else if (select.equals("My Cart")) {
-                       Intent i1 = new Intent(Master_Home.this,Cart.class);
-                       startActivity(i1);
-                   }else if (select.equals("My Profile")) {
-                       Intent i1 = new Intent(Master_Home.this,Profile.class);
-                       startActivity(i1);
-                   }  else if (select.equals("Change Password")) {
-                       Intent i1 = new Intent(Master_Home.this,Update_password.class);
-                       startActivity(i1);
-                   } else if (select.equals("Share")) {
-                       startTest();
-                   } else if (select.equals("Customer Service")) {
-                       Intent i1 = new Intent(Master_Home.this,Query.class);
-                       startActivity(i1);
-                   }
-                   else if (select.equals("About")) {
-                       Intent i1 = new Intent(Master_Home.this,About.class);
-                       startActivity(i1);
-                   }
-                   else if (select.equals("Logout")) {
-
-                       AlertDialog.Builder builder1 = new AlertDialog.Builder(Master_Home.this);
-                       builder1.setMessage("Do you want to Logout ?")
-                               .setCancelable(false)
-                               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                   private SharedPreferences.Editor f2467p;
-
-                                   @Override
-                                   public void onClick(DialogInterface dialog, int which) {
-                                       C0456b.f2467p = getSharedPreferences(C0456b.f2907a,0);
-
-                                       String f2466o = C0456b.f2467p.getString("user_id", null);
-                                       this.f2467p = C0456b.f2467p.edit();
-
-                                       this.f2467p.putString("user_id",null);
-                                       this.f2467p.commit();
-                                       Intent i1 = new Intent(Master_Home.this,Check.class);
-                                       startActivity(i1);
-                                       Intent intent = new Intent(Intent.ACTION_MAIN);
-                                       intent.addCategory(Intent.CATEGORY_HOME);
-                                       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                       startActivity(intent);
-                                   }
-                               })
-                               .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialog, int which) {
-                                       dialog.cancel();
-                                   }
-                               });
-                       AlertDialog alert = builder1.create();
-                       alert.setTitle("Logout");
-                       alert.show();
-                   }
-                   else if(id.contains("cat"))
-                   {
-                       String id1=id.replace("cat","");
-                       startActivity(new Intent(Master_Home.this, Product.class).putExtra("sub_cat_id", id1).putExtra("sub_cat_name", select));
-                   }
-
-
-
-               }
-
-               @Override
-               public void onItemClicked(MultiLevelListView parent, View view, Object item, ItemInfo itemInfo) {
-
-                   if(viewchk==true)
-                   {
-                       fview.setBackgroundColor(color);
-                       viewchk=false;
-
-                   }
-                   color=view.getDrawingCacheBackgroundColor();
-                       //view.setBackgroundColor(Color.parseColor("#FF58B358"));
-                   viewchk=true;
-                   fview=view;
-                   showItemDescription(item, itemInfo);
-               }
-
-               @Override
-               public void onGroupItemClicked(MultiLevelListView parent, View view, Object item, ItemInfo itemInfo) {
-
-                   if(viewchk1==true)
-                   {
-                       fview1.setBackgroundColor(color);
-                       viewchk1=false;
-
-                   }
-                   color1=view.getDrawingCacheBackgroundColor();
-                  // view.setBackgroundColor(Color.parseColor("#FF58B358"));
-                   viewchk1=true;
-                   fview1=view;
-                   showItemDescription(item, itemInfo);
-               }
-           };
-
-           private String getItemInfoDsc(ItemInfo itemInfo)
-           {
-               StringBuilder builder = new StringBuilder();
-
-               builder.append(String.format("level[%d], idx in level[%d/%d]",
-                       itemInfo.getLevel() + 1, /*Indexing starts from 0*/
-                       itemInfo.getIdxInLevel() + 1 /*Indexing starts from 0*/,
-                       itemInfo.getLevelSize()));
-
-               if (itemInfo.isExpandable()) {
-                   builder.append(String.format(", expanded[%b]", itemInfo.isExpanded()));
-               }
-               return builder.toString();
-           }
-           private class ListAdapter extends MultiLevelListAdapter {
-
-               private class ViewHolder {
-                   TextView nameView;
-                   TextView infoView;
-                   ImageView icon;
-                   ImageView arrowView;
-                   LevelBeamView levelBeamView;
-               }
-
-               @Override
-               public List<?> getSubObjects(Object object) {
-
-                   //Toast.makeText(Master_Home.this, , Toast.LENGTH_SHORT).show();
-                   if(resobj==null)
-                   {
-                       //new Master_Home();
-                       return CustomDataProvider.getSubItems((BaseItem) object,Master_Home.this,null);
-                   }
-                   // DIEKSEKUSI SAAT KLIK PADA GROUP-ITEM
-                   return CustomDataProvider.getSubItems((BaseItem) object,Master_Home.this,resobj);
-
-               }
-
-               @Override
-               public boolean isExpandable(Object object) {
-                   return CustomDataProvider.isExpandable((BaseItem) object);
-               }
-
-               @Override
-               public View getViewForObject(Object object, View convertView, ItemInfo itemInfo) {
-                   ViewHolder viewHolder;
-                   if (convertView == null) {
-                       viewHolder = new ViewHolder();
-                       convertView = LayoutInflater.from(Master_Home.this).inflate(R.layout.data_item, null);
-                       //viewHolder.infoView = (TextView) convertView.findViewById(R.id.dataItemInfo);
-                       viewHolder.nameView = (TextView) convertView.findViewById(R.id.dataItemName);
-                       //viewHolder.nameView.setTextColor(R.color.black);
-                       viewHolder.arrowView = (ImageView) convertView.findViewById(R.id.dataItemArrow);
-                       viewHolder.icon= (ImageView) convertView.findViewById(R.id.icon);
-                       //viewHolder.levelBeamView = (LevelBeamView) convertView.findViewById(R.id.dataItemLevelBeam);
-                       convertView.setTag(viewHolder);
-                   } else {
-                       viewHolder = (ViewHolder) convertView.getTag();
-                   }
-
-                   viewHolder.nameView.setText(((BaseItem) object).getName());
-                   viewHolder.nameView.setTextColor(Color.BLACK);
-                   String select=((BaseItem) object).getName();
-                   if(select.equals("Home")) {
-                       //viewHolder.nameView.setTextColor(R.color.black);
-                       viewHolder.icon.setImageResource(R.drawable.ic_navhome);
-                   }else if(select.equals("Category")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_list);
-                   }else if(select.equals("My Cart")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_cart);
-                   }else if(select.equals("My Order")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_list);
-                   }else if(select.equals("My Profile")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_user);
-                   }else if(select.equals("Change Password")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_lock);
-                   }else if(select.equals("Share")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_menu_share);
-                   }else if(select.equals("About")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_about);
-                   }else if(select.equals("Logout")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_logout);
-                   }else if(select.equals("Customer Service")){
-                       viewHolder.icon.setImageResource(R.drawable.ic_question);
-                   }
-
-                   //viewHolder.infoView.setText(getItemInfoDsc(itemInfo));
-
-                   if (itemInfo.isExpandable()) {
-                       viewHolder.arrowView.setVisibility(View.VISIBLE);
-                       viewHolder.arrowView.setImageResource(itemInfo.isExpanded() ?
-                               R.drawable.ic_expand_less : R.drawable.ic_expand_more);
-                   } else {
-                       viewHolder.arrowView.setVisibility(View.GONE);
-                   }
-                   if(itemInfo.getLevel()>0)
-                   {
-                       viewHolder.icon.setVisibility(View.GONE);
-                   }
-                   if(itemInfo.getLevel()==0)
-                   {
-                       viewHolder.icon.setVisibility(View.VISIBLE);
-                   }
-                   //viewHolder.levelBeamView.setLevel(itemInfo.getLevel());
-
-                   return convertView;
-               }
-           }
-
-
-
-
-           /* Hide By Rahul Rijhwani
-        @SuppressWarnings("StatementWithEmptyBody")
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            // Handle navigation view item clicks here.
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
+            if (select.equals("Home")) {
                 Fragment selectedFragment = null;
                 selectedFragment = Home.newInstance();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.content, selectedFragment);
                 transaction.commit();
-            } else if (id == R.id.nav_order) {
-                Intent i1 = new Intent(Master_Home.this,Order_details.class);
-                startActivity(i1);
-            }
-            else if (id == R.id.nav_cart) {
-                Intent i1 = new Intent(Master_Home.this,Cart.class);
-                startActivity(i1);
-            }else if (id == R.id.nav_profile) {
-                Intent i1 = new Intent(Master_Home.this,Profile.class);
-                startActivity(i1);
-            }  else if (id == R.id.nav_password) {
-                Intent i1 = new Intent(Master_Home.this,Update_password.class);
-                startActivity(i1);
-            } else if (id == R.id.nav_share) {
-                startTest();
-            } else if (id == R.id.nav_service) {
-                Intent i1 = new Intent(Master_Home.this,Query.class);
-                startActivity(i1);
-            }
-            else if (id == R.id.nav_about) {
-                Intent i1 = new Intent(Master_Home.this,About.class);
-                startActivity(i1);
-            }
-            else if (id == R.id.nav_logout) {
+                try {
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        drawer.closeDrawer(GravityCompat.START);
+                    }
+                } catch (Exception e) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(Master_Home.this);
-                builder.setMessage("Do you want to Logout ?")
+                }
+            } else if (select.equals("My Order")) {
+                if (user_id.equals("1")) {
+                    Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1 = new Intent(Master_Home.this, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i1);
+                } else {
+                    Intent i1 = new Intent(Master_Home.this, Order_details.class);
+                    startActivity(i1);
+                }
+            }else if (select.equals("Login")) {
+
+                Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                Intent i1 = new Intent(Master_Home.this, Login.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i1);
+            }
+            else if (select.equals("My Cart")) {
+                if (user_id.equals("1")) {
+                    Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1 = new Intent(Master_Home.this, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i1);
+                } else {
+                    Intent i1 = new Intent(Master_Home.this, Cart.class);
+                    startActivity(i1);
+                }
+            } else if (select.equals("My Profile")) {
+                if (user_id.equals("1")) {
+                    Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1 = new Intent(Master_Home.this, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i1);
+                } else {
+                    Intent i1 = new Intent(Master_Home.this, Profile.class);
+                    startActivity(i1);
+                }
+            } else if (select.equals("Change Password")) {
+                if (user_id.equals("1")) {
+                    Toast.makeText(Master_Home.this, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1 = new Intent(Master_Home.this, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i1);
+                } else {
+                    Intent i1 = new Intent(Master_Home.this, Update_password.class);
+                    startActivity(i1);
+                }
+            } else if (select.equals("Share")) {
+                // startTest();
+            } else if (select.equals("Customer Service")) {
+                Intent i1 = new Intent(Master_Home.this, Query.class);
+                startActivity(i1);
+            } else if (select.equals("About")) {
+                Intent i1 = new Intent(Master_Home.this, About.class);
+                startActivity(i1);
+            } else if (select.equals("Logout")) {
+
+
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(Master_Home.this);
+                builder1.setMessage("Do you want to Logout ?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             private SharedPreferences.Editor f2467p;
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                C0456b.f2467p = getSharedPreferences(C0456b.f2907a,0);
+                                gettokennull(user_id);
+                                C0456b.f2467p = getSharedPreferences(C0456b.f2907a, 0);
 
-                               String f2466o = C0456b.f2467p.getString("user_id", null);
+                                String f2466o = C0456b.f2467p.getString("user_id", null);
                                 this.f2467p = C0456b.f2467p.edit();
 
-                                this.f2467p.putString("user_id",null);
+                                this.f2467p.putString("user_id", null);
                                 this.f2467p.commit();
-                                Intent i1 = new Intent(Master_Home.this,Check.class);
-                                startActivity(i1);
+                                Intent i1 = new Intent(Master_Home.this, Login.class);
+                                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(i1);/*
                                 Intent intent = new Intent(Intent.ACTION_MAIN);
                                 intent.addCategory(Intent.CATEGORY_HOME);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                startActivity(intent);*/
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -590,16 +413,261 @@ public class Master_Home extends AppCompatActivity
                                 dialog.cancel();
                             }
                         });
-                AlertDialog alert = builder.create();
+                AlertDialog alert = builder1.create();
                 alert.setTitle("Logout");
                 alert.show();
+            } else if (id.contains("cat")) {
+                String id1 = id.replace("cat", "");
+                startActivity(new Intent(Master_Home.this, Product.class).putExtra("sub_cat_id", id1).putExtra("sub_cat_name", select));
             }
 
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        } Till here By Rahul*/
+        }
+
+        @Override
+        public void onItemClicked(MultiLevelListView parent, View view, Object item, ItemInfo itemInfo) {
+
+            if (viewchk == true) {
+                fview.setBackgroundColor(color);
+                viewchk = false;
+
+            }
+            color = view.getDrawingCacheBackgroundColor();
+            //view.setBackgroundColor(Color.parseColor("#FF58B358"));
+            viewchk = true;
+            fview = view;
+            showItemDescription(item, itemInfo);
+        }
+
+        @Override
+        public void onGroupItemClicked(MultiLevelListView parent, View view, Object item, ItemInfo itemInfo) {
+
+            if (viewchk1 == true) {
+                fview1.setBackgroundColor(color);
+                viewchk1 = false;
+
+            }
+            color1 = view.getDrawingCacheBackgroundColor();
+            // view.setBackgroundColor(Color.parseColor("#FF58B358"));
+            viewchk1 = true;
+            fview1 = view;
+            showItemDescription(item, itemInfo);
+        }
+    };
+
+    private void gettokennull(String user_id) {
+
+
+        final DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
+        mDilatingDotsProgressBar.showNow();
+
+        RestClient.GitApiInterface service = RestClient.getClient();
+        Call<UserLogin> call = service.getTokennull(Config.mem_string, user_id);
+        call.enqueue(new Callback<UserLogin>() {
+
+            @Override
+            public void onResponse(Response<UserLogin> response) {
+
+
+                if (response.isSuccess()) {}
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
+    private String getItemInfoDsc(ItemInfo itemInfo) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(String.format("level[%d], idx in level[%d/%d]",
+                itemInfo.getLevel() + 1, /*Indexing starts from 0*/
+                itemInfo.getIdxInLevel() + 1 /*Indexing starts from 0*/,
+                itemInfo.getLevelSize()));
+
+        if (itemInfo.isExpandable()) {
+            builder.append(String.format(", expanded[%b]", itemInfo.isExpanded()));
+        }
+        return builder.toString();
+    }
+
+    private class ListAdapter extends MultiLevelListAdapter {
+
+        private class ViewHolder {
+            TextView nameView;
+            TextView infoView;
+            ImageView icon;
+            ImageView arrowView;
+            LevelBeamView levelBeamView;
+        }
+
+        @Override
+        public List<?> getSubObjects(Object object) {
+
+            //Toast.makeText(Master_Home.this, , Toast.LENGTH_SHORT).show();
+            if (resobj == null) {
+                //new Master_Home();
+                return CustomDataProvider.getSubItems((BaseItem) object, Master_Home.this, null);
+            }
+            // DIEKSEKUSI SAAT KLIK PADA GROUP-ITEM
+            return CustomDataProvider.getSubItems((BaseItem) object, Master_Home.this, resobj);
+
+        }
+
+        @Override
+        public boolean isExpandable(Object object) {
+            return CustomDataProvider.isExpandable((BaseItem) object);
+        }
+
+        @Override
+        public View getViewForObject(Object object, View convertView, ItemInfo itemInfo) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(Master_Home.this).inflate(R.layout.data_item, null);
+                //viewHolder.infoView = (TextView) convertView.findViewById(R.id.dataItemInfo);
+                viewHolder.nameView = (TextView) convertView.findViewById(R.id.dataItemName);
+                //viewHolder.nameView.setTextColor(R.color.black);
+                viewHolder.arrowView = (ImageView) convertView.findViewById(R.id.dataItemArrow);
+                viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                //viewHolder.levelBeamView = (LevelBeamView) convertView.findViewById(R.id.dataItemLevelBeam);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            viewHolder.nameView.setText(((BaseItem) object).getName());
+            viewHolder.nameView.setTextColor(Color.BLACK);
+            String select = ((BaseItem) object).getName();
+
+            if (select.equals("Home")) {
+                //viewHolder.nameView.setTextColor(R.color.black);
+                viewHolder.icon.setImageResource(R.drawable.ic_navhome);
+            }else if (select.equals("Login")){
+                viewHolder.icon.setImageResource(R.drawable.ic_logout);
+            }
+            else if (select.equals("Category")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_list);
+            } else if (select.equals("My Cart")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_cart);
+            } else if (select.equals("My Order")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_list);
+            } else if (select.equals("My Profile")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_user);
+            } else if (select.equals("Change Password")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_lock);
+            } else if (select.equals("Share")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_menu_share);
+            } else if (select.equals("About")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_about);
+            } else if (select.equals("Logout")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_logout);
+            } else if (select.equals("Customer Service")) {
+                viewHolder.icon.setImageResource(R.drawable.ic_question);
+            }
+
+            //viewHolder.infoView.setText(getItemInfoDsc(itemInfo));
+
+            if (itemInfo.isExpandable()) {
+                viewHolder.arrowView.setVisibility(View.VISIBLE);
+                viewHolder.arrowView.setImageResource(itemInfo.isExpanded() ?
+                        R.drawable.ic_expand_less : R.drawable.ic_expand_more);
+            } else {
+                viewHolder.arrowView.setVisibility(View.GONE);
+            }
+            if (itemInfo.getLevel() > 0) {
+                viewHolder.icon.setVisibility(View.GONE);
+            }
+            if (itemInfo.getLevel() == 0) {
+                viewHolder.icon.setVisibility(View.VISIBLE);
+            }
+            //viewHolder.levelBeamView.setLevel(itemInfo.getLevel());
+
+            return convertView;
+        }
+    }
+
+
+    /* Hide By Rahul Rijhwani
+ @SuppressWarnings("StatementWithEmptyBody")
+ @Override
+ public boolean onNavigationItemSelected(MenuItem item) {
+     // Handle navigation view item clicks here.
+     int id = item.getItemId();
+
+     if (id == R.id.nav_home) {
+         Fragment selectedFragment = null;
+         selectedFragment = Home.newInstance();
+         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+         transaction.replace(R.id.content, selectedFragment);
+         transaction.commit();
+     } else if (id == R.id.nav_order) {
+         Intent i1 = new Intent(Master_Home.this,Order_details.class);
+         startActivity(i1);
+     }
+     else if (id == R.id.nav_cart) {
+         Intent i1 = new Intent(Master_Home.this,Cart.class);
+         startActivity(i1);
+     }else if (id == R.id.nav_profile) {
+         Intent i1 = new Intent(Master_Home.this,Profile.class);
+         startActivity(i1);
+     }  else if (id == R.id.nav_password) {
+         Intent i1 = new Intent(Master_Home.this,Update_password.class);
+         startActivity(i1);
+     } else if (id == R.id.nav_share) {
+         startTest();
+     } else if (id == R.id.nav_service) {
+         Intent i1 = new Intent(Master_Home.this,Query.class);
+         startActivity(i1);
+     }
+     else if (id == R.id.nav_about) {
+         Intent i1 = new Intent(Master_Home.this,About.class);
+         startActivity(i1);
+     }
+     else if (id == R.id.nav_logout) {
+
+         AlertDialog.Builder builder = new AlertDialog.Builder(Master_Home.this);
+         builder.setMessage("Do you want to Logout ?")
+                 .setCancelable(false)
+                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                     private SharedPreferences.Editor f2467p;
+
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         C0456b.f2467p = getSharedPreferences(C0456b.f2907a,0);
+
+                        String f2466o = C0456b.f2467p.getString("user_id", null);
+                         this.f2467p = C0456b.f2467p.edit();
+
+                         this.f2467p.putString("user_id",null);
+                         this.f2467p.commit();
+                         Intent i1 = new Intent(Master_Home.this,Check.class);
+                         startActivity(i1);
+                         Intent intent = new Intent(Intent.ACTION_MAIN);
+                         intent.addCategory(Intent.CATEGORY_HOME);
+                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                         startActivity(intent);
+                     }
+                 })
+                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         dialog.cancel();
+                     }
+                 });
+         AlertDialog alert = builder.create();
+         alert.setTitle("Logout");
+         alert.show();
+     }
+
+
+     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+     drawer.closeDrawer(GravityCompat.START);
+     return true;
+ } Till here By Rahul*/
     private void startTest() {
 
         // set up an intent to share the image
@@ -627,68 +695,72 @@ public class Master_Home extends AppCompatActivity
                             }).create()).show();
         }
     }
+
     public int callCartData(String user_id) {
+        if (user_id.equals("1")) {
+            mCartItemCount = 0;
+        } else {
 
 
-        RestClient.GitApiInterface service = RestClient.getClient();
+            RestClient.GitApiInterface service = RestClient.getClient();
 
-        Call<AllCart> call = service.getCartDetails( Config.mem_string,user_id);
-        call.enqueue(new Callback<AllCart>() {
-            @Override
+            Call<AllCart> call = service.getCartDetails(Config.mem_string, user_id);
+            call.enqueue(new Callback<AllCart>() {
+                @Override
 
 
-            public void onResponse(Response<AllCart> response) {
-                if (response.isSuccess()) {
-                    // request successful (status code 200, 201)
-                    AllCart result = response.body();
-                    if (result.getStatus().equals("success")) {
-                        if (result.getProduct() != null) {
-                            if (result.getProduct().size() > 0) {
-                                getallCartProductLists.clear();
-                                getallCartProductLists.addAll(result.getProduct());
-                                // adapter.notifyDataSetChanged();
+                public void onResponse(Response<AllCart> response) {
+                    if (response.isSuccess()) {
+                        // request successful (status code 200, 201)
+                        AllCart result = response.body();
+                        if (result.getStatus().equals("success")) {
+                            if (result.getProduct() != null) {
+                                if (result.getProduct().size() > 0) {
+                                    getallCartProductLists.clear();
+                                    getallCartProductLists.addAll(result.getProduct());
+                                    // adapter.notifyDataSetChanged();
 
-                                if (getallCartProductLists.isEmpty()) {
-                                    //     recyclerView.setVisibility(View.GONE);
-                                    //    empty_view.setVisibility(View.VISIBLE);
-                                    mCartItemCount= 0;
-                                    textCartItemCount.setText(mCartItemCount);
-                                } else {
-                                    //  recyclerView.setVisibility(View.VISIBLE);
-                                    //  empty_view.setVisibility(View.GONE);
-                                    int qty=0;
-                                    for(int i=0;i<result.getProduct().size();i++) {
-                                        AllCartProduct jo = result.getProduct().get(i);
-                                        qty= qty+Integer.parseInt(jo.getOde_quantity());
+                                    if (getallCartProductLists.isEmpty()) {
+                                        //     recyclerView.setVisibility(View.GONE);
+                                        //    empty_view.setVisibility(View.VISIBLE);
+                                        mCartItemCount = 0;
+                                        textCartItemCount.setText(mCartItemCount);
+                                    } else {
+                                        //  recyclerView.setVisibility(View.VISIBLE);
+                                        //  empty_view.setVisibility(View.GONE);
+                                        int qty = 0;
+                                        for (int i = 0; i < result.getProduct().size(); i++) {
+                                            AllCartProduct jo = result.getProduct().get(i);
+                                            qty = qty + Integer.parseInt(jo.getOde_quantity());
+                                        }
+                                        int a = qty;
+                                        mCartItemCount = a;
+                                        textCartItemCount.setText(a + "");
                                     }
-                                    int a = qty;
-                                    mCartItemCount= a ;
-                                    textCartItemCount.setText(a + "");
+                                } else {
+                                    //recyclerView.setVisibility(View.GONE);
+                                    //empty_view.setVisibility(View.VISIBLE);
+
+
                                 }
-                            } else {
-                                //recyclerView.setVisibility(View.GONE);
-                                //empty_view.setVisibility(View.VISIBLE);
-
-
                             }
+
+                        } else if (result.getStatus().equals("empty_cart")) {
+
+                        } else {
+
                         }
-
-                    } else if (result.getStatus().equals("empty_cart")){
-
-                    }
-                    else
-                    {
+                    } else {
+                        // response received but request not successful (like 400,401,403 etc)
 
                     }
-                } else {
-                    // response received but request not successful (like 400,401,403 etc)
-
                 }
-            }
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+        }
         return mCartItemCount;
 
     }

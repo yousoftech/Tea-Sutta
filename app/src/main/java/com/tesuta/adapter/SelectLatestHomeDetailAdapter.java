@@ -2,6 +2,7 @@ package com.tesuta.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import com.tesuta.models.AllProductUnitDetailsList;
 import com.tesuta.models.UserAddProductCart;
 import com.tesuta.models.UserMinusProductCart;
 import com.tesuta.models.unitpojo;
+import com.tesuta.shopping.Cart;
+import com.tesuta.shopping.Login;
 import com.tesuta.shopping.Master_Home;
 import com.tesuta.R;
 import com.tesuta.models.AllLatestHomeProductList;
@@ -47,7 +50,7 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
     int TotalCount = 0;
     String product_unit_id,user_id;
     ArrayList<unitpojo> event=new ArrayList<unitpojo>();
-
+    Double totalcost=0.0;
 
     public SelectLatestHomeDetailAdapter(Context context,String user_id, List<AllLatestHomeProductList> getallLatestHomeAllProductLists) {
         this.context = context;
@@ -82,7 +85,9 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
         gmailVH.qtycheck.setText(qtyck);
         gmailVH.h_p_name.setText(text6);
         gmailVH.h_p_unit.setText(text7);
-        gmailVH.h_p_actual_cost.setText(text4);
+        gmailVH.h_p_actual_cost.setText(text5);
+
+
 
         String cartval = String.format(res.getString(R.string.txt_message223), getallLatestHomeAllProductLists.get(i).getCart_val());
 
@@ -120,7 +125,20 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
         }
 
 
-        gmailVH.h_p_offer_cost.setText(text5);
+
+        totalcost=Double.parseDouble(getallLatestHomeAllProductLists.get(i).getPro_offercost());
+
+        if(Integer.parseInt(getallLatestHomeAllProductLists.get(i).getCart_val())>0)
+        {
+            double ac=Double.parseDouble( gmailVH.h_p_actual_cost.getText().toString());
+            int ctv=Integer.parseInt(getallLatestHomeAllProductLists.get(i).getCart_val());
+            double ttc=ac+ctv;
+            String t = String.valueOf(Double.parseDouble( gmailVH.h_p_actual_cost.getText().toString()) * Integer.parseInt(getallLatestHomeAllProductLists.get(i).getCart_val()));
+            gmailVH.h_p_offer_cost.setText(t);
+        }
+        else{
+            gmailVH.h_p_offer_cost.setText(text5);
+        }
         try {
             Picasso.with(context).load(getallLatestHomeAllProductLists.get(i).getPro_image()).into(gmailVH.h_p_image);
 
@@ -161,10 +179,17 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
         gmailVH.h_p_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addtocart(gmailVH,Config.mem_string, getallLatestHomeAllProductLists.get(i).getUser_id(), getallLatestHomeAllProductLists.get(i).getPro_id(), getallLatestHomeAllProductLists.get(i).getTpd_id());
+                if(user_id.equals("1")){
+                    Toast.makeText(context, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1=new Intent(context, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(i1);
+                }
+                else {
+                    addtocart(gmailVH, Config.mem_string, getallLatestHomeAllProductLists.get(i).getUser_id(), getallLatestHomeAllProductLists.get(i).getPro_id(), getallLatestHomeAllProductLists.get(i).getTpd_id());
+                }
             }
         });
-
 
     }
 
@@ -266,6 +291,7 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
                         gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
                         TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+                        gmailVH.h_p_offer_cost.setText(String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString())));
                     }
                     else
                     {
@@ -304,8 +330,10 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
                         gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)-1));
                         TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())-1));
+                        gmailVH.h_p_offer_cost.setText(String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString())));
                         if(gmailVH.c_quantity.getText().toString().equals("0"))
                         {
+                            gmailVH.h_p_offer_cost.setText(String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())));
                             gmailVH.h_p_add.setVisibility(View.VISIBLE);
                             gmailVH.cartadd_min.setVisibility(View.GONE);
                             /*Intent i1 = new Intent(context.getApplicationContext(),Master_Home.class);
@@ -362,6 +390,7 @@ public class SelectLatestHomeDetailAdapter extends RecyclerView.Adapter<SelectLa
                         gmailVH.c_quantity.setText("1");
                         TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+                        gmailVH.h_p_offer_cost.setText(String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())));
                        // TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                        // txtcart.setText(Integer.parseInt(txtcart.getText().toString())+1);
 

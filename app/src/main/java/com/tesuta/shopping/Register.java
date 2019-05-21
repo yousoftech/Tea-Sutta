@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tesuta.R;
 import com.tesuta.models.RegisterUser;
 import com.tesuta.rest.Config;
@@ -90,8 +91,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void setRegisterUser() {
-        String android_id = Settings.Secure.getString(Register.this.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+        String token= FirebaseInstanceId.getInstance().getToken();
+        String android_id = token;
 
         edt_fname1 = edt_fname.getText().toString();
         edt_lname1 = edt_lname.getText().toString();

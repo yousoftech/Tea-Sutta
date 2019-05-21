@@ -193,7 +193,7 @@
                             android:layout_toLeftOf="@id/h_p_offer_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="App \u20B9"
+                            android:text="Price \u20B9"
                             android:textStyle="bold"
                             android:textColor="@color/colorAccent"
                             android:textSize="17dp" />

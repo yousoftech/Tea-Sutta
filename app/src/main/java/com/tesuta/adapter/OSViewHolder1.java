@@ -1,11 +1,14 @@
 package com.tesuta.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +41,7 @@ public class OSViewHolder1 extends GroupViewHolder {
     private TextView txt_disc;
     private TextView or_disc;
     private TextView or_ship;
+    private Button btncancel;
  
     Context context;
     public OSViewHolder1(View itemView) {
@@ -53,6 +57,7 @@ public class OSViewHolder1 extends GroupViewHolder {
         or_ship = (TextView) itemView.findViewById(R.id.or_ship);
         h_e_arrow = (ImageView) itemView.findViewById(R.id.h_e_arrow);
         h_e_card = (CardView) itemView.findViewById(R.id.card_view);
+        btncancel=(Button)itemView.findViewById(R.id.btncancel);
     }
     @Override
     public void expand() {
@@ -92,12 +97,15 @@ public class OSViewHolder1 extends GroupViewHolder {
         }
         if (seperatr_data[1].equals("Pending"))
         {
-            //or_cancel.setVisibility(View.GONE);
+            btncancel.setVisibility(View.VISIBLE);
         }
-        /*or_cancel.setOnClickListener(new View.OnClickListener() {
+        else{
+            btncancel.setVisibility(View.GONE);
+        }
+        btncancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(false){*//*
+                if(true){
                     Log.d("fgh","Cancel");
                     // ((Cart)context).callCartData();
                     // itemView.getContext().startActivity(new Intent("com.hshop.shopping.Master_Home"));
@@ -121,14 +129,14 @@ public class OSViewHolder1 extends GroupViewHolder {
                     alert.setTitle("Cancel Order");
                     alert.show();
 
-                *//*}
+                }
                 else{
                     Toast.makeText(context, "You Can Not Cancel Order", Toast.LENGTH_LONG).show();
                     Toast.makeText(context, "Contact Customer Service", Toast.LENGTH_LONG).show();
                 }
             }
         });
-*/
+
     }
     private void ordercancel(String order_id) {
         RestClient.GitApiInterface service = RestClient.getClient();
@@ -143,6 +151,10 @@ public class OSViewHolder1 extends GroupViewHolder {
                         Toast.makeText(itemView.getContext(), "Order Successfully Cancel", Toast.LENGTH_SHORT).show();
                         itemView.getContext().startActivity(new Intent(itemView.getContext(), Master_Home.class));
                         }
+                        else{
+                        Toast.makeText(itemView.getContext(), "Please try again is something wrong", Toast.LENGTH_SHORT).show();
+                        itemView.getContext().startActivity(new Intent(itemView.getContext(), Master_Home.class));
+                    }
                 }
             }
             @Override

@@ -41,6 +41,17 @@ public class Order_details extends AppCompatActivity {
     private ArrayList<MobileOS1> mobileOSes = new ArrayList<>();
     Button start_shopping;
     @Override
+    public void onStart() {
+        super.onStart();
+        if(user_id.equals("1"))
+        {
+            Intent i1 = new Intent(this,Check.class);
+            i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i1);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);

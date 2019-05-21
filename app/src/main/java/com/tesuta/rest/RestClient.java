@@ -8,11 +8,15 @@ import com.tesuta.models.AllCart;
 import com.tesuta.models.AllContactCheck;
 import com.tesuta.models.AllHome;
 import com.tesuta.models.AllOrder;
+import com.tesuta.models.AllOrderDelivery;
 import com.tesuta.models.AllSearch;
 import com.tesuta.models.CategoryDetails;
+
+import com.tesuta.models.DeliveryLogin;
 import com.tesuta.models.ProductDetails;
 import com.tesuta.models.ProductName;
 import com.tesuta.models.RegisterUser;
+import com.tesuta.models.Sendmsg;
 import com.tesuta.models.SubCategoryDetails;
 import com.tesuta.models.UserActiveInfo;
 import com.tesuta.models.UserAddCart;
@@ -112,7 +116,11 @@ public class RestClient {
 
         @FormUrlEncoded
         @POST("API/user_login.php")
-        Call<UserLogin> getUserLogin(@Field("mem_string") String mem_string, @Field("mem_contact") String mem_contact1, @Field("mem_password") String mem_password1);
+        Call<UserLogin> getUserLogin(@Field("mem_string") String mem_string, @Field("mem_contact") String mem_contact1, @Field("mem_password") String mem_password1,@Field("fcm_token") String fcm_token);
+
+        @FormUrlEncoded
+        @POST("API/delivery_login.php")
+        Call<DeliveryLogin> getDeliveryLogin(@Field("mem_string") String mem_string, @Field("mem_contact") String mem_contact1, @Field("mem_password") String mem_password1);
 
         @FormUrlEncoded
         @POST("API/user_update_password.php")
@@ -187,6 +195,9 @@ public class RestClient {
         @POST("API/user_order_details.php")
         Call<AllOrder> getAllorder(@Field("mem_string") String mem_string, @Field("user_id") String user_id);
 
+        @FormUrlEncoded
+        @POST("API/getdelivaryinfo.php")
+        Call<AllOrderDelivery> getAllorderDelivery(@Field("mem_string") String mem_string, @Field("user_id") String user_id);
 
 
         @FormUrlEncoded
@@ -200,5 +211,17 @@ public class RestClient {
         @FormUrlEncoded
         @POST("API/user_order_cancel.php")
         Call<AllCancel> getCancelOrder(@Field("mem_string") String mem_string, @Field("order_id") String order_id);
+
+
+        @FormUrlEncoded
+        @POST("API/delivery_status.php")
+        Call<AllCancel> getCompeteOrder(@Field("mem_string") String mem_string, @Field("order_id") String order_id);
+        @FormUrlEncoded
+        @POST("API/send_crash_mail.php")
+        Call<Sendmsg> sendcrashmail(@Field("mem_string") String mem_string, @Field("crashlog") String crashlog);
+
+        @FormUrlEncoded
+        @POST("API/token_null.php")
+        Call<UserLogin> getTokennull(@Field("mem_string") String mem_string, @Field("user_id") String user_id);
     }
 }

@@ -65,7 +65,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Apply Coupen" />
+                            android:text="Apply Coupon" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:id="@+id/coupenrupee"

@@ -5,7 +5,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
 
+import com.tesuta.R;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 /* renamed from: com.pumis.b.b */
+
+@ReportsCrashes(mailTo = "rijhwanirahul00@gmail.com",
+        customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT },
+        mode = ReportingInteractionMode.TOAST
+        )
 public class C0456b extends Application {
     public static String f2907a;
     public static String f2907a1;
@@ -24,6 +36,7 @@ public class C0456b extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(base);
+        ACRA.init(this);
     }
 
     static {

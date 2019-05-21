@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tesuta.R;
+import com.tesuta.models.DeliveryLogin;
 import com.tesuta.models.UserLogin;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
@@ -27,10 +31,13 @@ import retrofit.Response;
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_login;
-    TextView txt_forgot,txt_signup,txt_terms;
-    EditText edt_lcontact,edt_lpassword;
-    String status,contact,password;
+    TextView txt_forgot, txt_signup, txt_terms;
+    EditText edt_lcontact, edt_lpassword;
+    String status, contact, password;
     LinearLayout linear_server;
+    Boolean deliverylogin = false;
+    String token="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +53,30 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         txt_signup.setOnClickListener(this);
         txt_terms.setOnClickListener(this);
         linear_server = (LinearLayout) findViewById(R.id.linear_server);
+        token= FirebaseInstanceId.getInstance().getToken();
+        //Toast.makeText(this, token, Toast.LENGTH_SHORT).show();
     }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch (view.getId()) {
+            case R.id.deliverybtn:
+                if (checked) {
+                    deliverylogin = true;
+
+                } else {
+                    deliverylogin = false;
+
+                }
+                break;
+
+            // TODO: Veggie sandwich
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -57,30 +87,26 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 } else {
                     contact = edt_lcontact.getText().toString();
                     password = edt_lpassword.getText().toString();
-                    if (contact.length()==0)
-                    {
+                    if (contact.length() == 0) {
                         edt_lcontact.setError("Enter Contact");
-                    }
-                    else if (!isPhoneValid(contact))
-                    {
+                    } else if (!isPhoneValid(contact)) {
                         edt_lcontact.setError("Invalid Contact");
-                    }
-                    else if(password.length()==0)
-                    {
+                    } else if (password.length() == 0) {
                         edt_lpassword.setError("Enter Password");
+                    } else if(deliverylogin){
+                        checkdeliverylogin(contact, password);
                     }
-                    else
-                    {
-                        checklogin(contact,password);
+                        else {
+                        checklogin(contact, password,token);
                     }
                 }
                 break;
             case R.id.txt_forgot:
-                Intent i2 = new Intent(Login.this,Forgot_Password.class);
+                Intent i2 = new Intent(Login.this, Forgot_Password.class);
                 startActivity(i2);
                 break;
             case R.id.txt_signup:
-                Intent i3 = new Intent(Login.this,Generate_otp.class);
+                Intent i3 = new Intent(Login.this, Generate_otp.class);
                 //i3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i3);
                 break;
@@ -93,61 +119,47 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void checklogin(String contact, String password) {
+    private void checkdeliverylogin(String contact,String password){
+
 
         final DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
         mDilatingDotsProgressBar.showNow();
 
         RestClient.GitApiInterface service = RestClient.getClient();
-        Call<UserLogin> call = service.getUserLogin(Config.mem_string,contact,password);
-        call.enqueue(new Callback<UserLogin>() {
-            public SharedPreferences.Editor f2467p2;
-            public SharedPreferences.Editor f2467p1;
-            public SharedPreferences.Editor f2467p;
+        Call<DeliveryLogin> call = service.getDeliveryLogin(Config.mem_string, contact, password);
+        call.enqueue(new Callback<DeliveryLogin>() {
+            SharedPreferences sharedpreferences = getSharedPreferences("deliveryprf", MODE_PRIVATE);
+
             @Override
-            public void onResponse(Response<UserLogin> response) {
+            public void onResponse(Response<DeliveryLogin> response) {
                 mDilatingDotsProgressBar.hideNow();
                 Log.d("SplashActivity", "Status Code = " + response.code());
                 if (response.isSuccess()) {
                     // request successful (status code 200, 201)
-                    UserLogin result = response.body();
-                    Log.d("fgh",result.getStatus());
-                    if(result.getStatus().equals("success")) {
-                        if (result.getData() != null) {
-                            String user_id1 = String.valueOf(result.getData());
-                            String user_name1 = String.valueOf(result.getUser_fname());
-                            String user_contact1 = String.valueOf(result.getUser_contact());
-                            String user_address1 = String.valueOf(result.getUser_address());
+                    DeliveryLogin result = response.body();
+                    Log.d("fgh", result.getStatus());
+                    if (result.getStatus().equals("success")) {
+                        if (result.getDelivery_id() != null) {
+                            String user_id1 = String.valueOf(result.getDelivery_id());
+                            String user_name1 = String.valueOf(result.getName());
+                            String user_contact1 = String.valueOf(result.getNumber());
 
-                            C0456b.f2467p = getSharedPreferences(C0456b.f2907a,0);
-                            C0456b.f2467p1 = getSharedPreferences(C0456b.f2907a1,0);
-                            C0456b.f2467p2 = getSharedPreferences(C0456b.f2907a2,0);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                            String f00p = C0456b.f2467p.getString("user_id",null);
-                            String f00p1 = C0456b.f2467p1.getString("user_info",null);
-                            String f00p2= C0456b.f2467p2.getString("user_address",null);
-                            this.f2467p = C0456b.f2467p.edit();
-                            this.f2467p1 = C0456b.f2467p1.edit();
-                            this.f2467p2 = C0456b.f2467p2.edit();
-                            this.f2467p.putString("user_id",user_id1);
-                            this.f2467p1.putString("user_info",user_name1+","+user_contact1);
-                            this.f2467p2.putString("user_address",user_address1);
-                            this.f2467p.commit();
-                            this.f2467p1.commit();
-                            this.f2467p2.commit();
+                            editor.putString("name",user_name1);
+                            editor.putString("deliveryid", user_id1);
+                            editor.putString("number", user_contact1);
+                            editor.commit();
 
-                            Intent i = new Intent(Login.this,Check.class);
+                            Intent i = new Intent(Login.this, Check.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(i);
                             finish();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -160,10 +172,83 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onFailure(Throwable t) {
                 mDilatingDotsProgressBar.hideNow();
-                    Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void checklogin(String contact, String password,String token) {
+
+
+        final DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
+        mDilatingDotsProgressBar.showNow();
+
+        RestClient.GitApiInterface service = RestClient.getClient();
+        Call<UserLogin> call = service.getUserLogin(Config.mem_string, contact, password,token);
+        call.enqueue(new Callback<UserLogin>() {
+            public SharedPreferences.Editor f2467p2;
+            public SharedPreferences.Editor f2467p1;
+            public SharedPreferences.Editor f2467p;
+
+            @Override
+            public void onResponse(Response<UserLogin> response) {
+                mDilatingDotsProgressBar.hideNow();
+                Log.d("SplashActivity", "Status Code = " + response.code());
+                if (response.isSuccess()) {
+                    // request successful (status code 200, 201)
+                    UserLogin result = response.body();
+                    Log.d("fgh", result.getStatus());
+                    if (result.getStatus().equals("success")) {
+                        if (result.getData() != null) {
+                            String user_id1 = String.valueOf(result.getData());
+                            String user_name1 = String.valueOf(result.getUser_fname());
+                            String user_contact1 = String.valueOf(result.getUser_contact());
+                            String user_address1 = String.valueOf(result.getUser_address());
+
+                            C0456b.f2467p = getSharedPreferences(C0456b.f2907a, 0);
+                            C0456b.f2467p1 = getSharedPreferences(C0456b.f2907a1, 0);
+                            C0456b.f2467p2 = getSharedPreferences(C0456b.f2907a2, 0);
+
+                            String f00p = C0456b.f2467p.getString("user_id", null);
+                            String f00p1 = C0456b.f2467p1.getString("user_info", null);
+                            String f00p2 = C0456b.f2467p2.getString("user_address", null);
+                            this.f2467p = C0456b.f2467p.edit();
+                            this.f2467p1 = C0456b.f2467p1.edit();
+                            this.f2467p2 = C0456b.f2467p2.edit();
+                            this.f2467p.putString("user_id", user_id1);
+                            this.f2467p1.putString("user_info", user_name1 + "," + user_contact1);
+                            this.f2467p2.putString("user_address", user_address1);
+                            this.f2467p.commit();
+                            this.f2467p1.commit();
+                            this.f2467p2.commit();
+
+                            Intent i = new Intent(Login.this, Check.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // response received but request not successful (like 400,401,403 etc)
+                    //Handle errors
+                    linear_server.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                mDilatingDotsProgressBar.hideNow();
+                Toast.makeText(Login.this, "Invalid Contact OR Password", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     public static boolean isPhoneValid(String phone) {
         boolean retval = false;

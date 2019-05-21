@@ -2,6 +2,9 @@ package com.tesuta.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.tesuta.models.AllProductDetailsList;
+import com.tesuta.models.AllProductImage;
+import com.tesuta.models.AllProductUnitDetailsList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,16 @@ public class ProductDetails {
     @SerializedName("product_data")
     @Expose
     private List<AllProductUnitDetailsList> product_data = new ArrayList<AllProductUnitDetailsList>();
+
+    public List<AllProductImage> getProduct_img() {
+        return product_img;
+    }
+
+    public void setProduct_img(List<AllProductImage> product_img) {
+        this.product_img = product_img;
+    }
+
+    private List<AllProductImage> product_img = new ArrayList<AllProductImage>();
 
     @SerializedName("message")
     @Expose

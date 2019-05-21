@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -24,12 +24,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.tesuta.R;
-import com.tesuta.adapter.Phone;
 import com.tesuta.adapter.SelectSubCategoryDetailAdapter;
 import com.tesuta.adapter.SubCategoryAdapterList;
 import com.tesuta.models.AllCart;
 import com.tesuta.models.AllCartProduct;
-import com.tesuta.models.AllHome;
 import com.tesuta.models.AllHomeExpandCatList;
 import com.tesuta.models.AllProductSubCategoryDetailsList;
 import com.tesuta.models.AllProductUnitDetailsList;
@@ -70,8 +68,46 @@ public class Product extends AppCompatActivity {
     List<AllCartProduct> getallCartProductLists = new ArrayList<>();
     ArrayList<SubCategoryDetails> event=new ArrayList<SubCategoryDetails>();
     RelativeLayout r1;
+    Intent i1;
     String sub_cat_id,sub_cat_name,recid=null,filter=null,nexsub_cat_id,nexsub_cat_name,nexfilter=null,persub_cat_id,persub_cat_name,perfilter=null,offer=null;
     private OnFeedItemClickListener onFeedItemClickListener;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(search==null) {
+            if (filter == null) {
+                if (offer == null)
+                {
+                    setTitle(sub_cat_name);
+                    callEventData(Config.mem_string, sub_cat_id);
+                }
+                else {
+                    setTitle(i1.getStringExtra("offer_name"));
+                    callEventData3(Config.mem_string, offer);
+                }
+            } else {
+                callEventData2(Config.mem_string, filter);
+            }
+
+            callfilter(sub_cat_id);
+        }
+        else
+        {
+            callEventData2(Config.mem_string, search);
+        }
+        //adpset();
+        if(filter!=null)
+        {
+            for(int ij=0;ij<event.size();ij++){
+
+                if((event.get(ij).getFilterid()).equals(filter));
+                {
+                    setTitle(event.get(ij).getSubCategoryName());
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +116,7 @@ public class Product extends AppCompatActivity {
 
         r1=(RelativeLayout)findViewById(R.id.r1);
 
-        Intent i1 = getIntent();
+        i1 = getIntent();
         recyclerView = (RecyclerView) findViewById(R.id.gmail_list);
 
         try
@@ -196,7 +232,7 @@ public class Product extends AppCompatActivity {
             }
         });
 
-        if(search==null) {
+        /*if(search==null) {
             if (filter == null) {
                 if (offer == null)
                 {
@@ -227,7 +263,7 @@ public class Product extends AppCompatActivity {
                     setTitle(event.get(ij).getSubCategoryName());
                 }
             }
-        }
+        }*/
         /*recyclerView.setOnTouchListener(new OnSwipeTouchListener(Product.this){
             public void onSwipeRight() {
                 Toast.makeText(Product.this, "right", Toast.LENGTH_SHORT).show();
@@ -279,67 +315,71 @@ public class Product extends AppCompatActivity {
 
     public int callCartData(String user_id) {
 
+        if(user_id.equals("1")){
+            mCartItemCount= 0;
+        }else{
+            RestClient.GitApiInterface service = RestClient.getClient();
 
-        RestClient.GitApiInterface service = RestClient.getClient();
-
-        Call<AllCart> call = service.getCartDetails( Config.mem_string,user_id);
-        call.enqueue(new Callback<AllCart>() {
-            @Override
+            Call<AllCart> call = service.getCartDetails(Config.mem_string, user_id);
+            call.enqueue(new Callback<AllCart>() {
+                @Override
 
 
-            public void onResponse(Response<AllCart> response) {
-                if (response.isSuccess()) {
-                    // request successful (status code 200, 201)
-                    AllCart result = response.body();
-                    if (result.getStatus().equals("success")) {
-                        if (result.getProduct() != null) {
-                            if (result.getProduct().size() > 0) {
-                                getallCartProductLists.clear();
-                                //getallHomeAllProductUnitLists.addAll()
-                                getallCartProductLists.addAll(result.getProduct());
-                                // adapter.notifyDataSetChanged();
+                public void onResponse(Response<AllCart> response) {
+                    if (response.isSuccess()) {
+                        // request successful (status code 200, 201)
+                        AllCart result = response.body();
+                        if (result.getStatus().equals("success")) {
+                            if (result.getProduct() != null) {
+                                if (result.getProduct().size() > 0) {
+                                    getallCartProductLists.clear();
+                                    getallCartProductLists.addAll(result.getProduct());
+                                    // adapter.notifyDataSetChanged();
 
-                                if (getallCartProductLists.isEmpty()) {
-                                    //     recyclerView.setVisibility(View.GONE);
-                                    //    empty_view.setVisibility(View.VISIBLE);
-                                    mCartItemCount= 0;
-                                    textCartItemCount.setText(mCartItemCount);
-                                } else {
-                                    //  recyclerView.setVisibility(View.VISIBLE);
-                                    //  empty_view.setVisibility(View.GONE);
-                                    int qty=0;
-                                    for(int i=0;i<result.getProduct().size();i++) {
-                                        AllCartProduct jo = result.getProduct().get(i);
-                                        qty= qty+Integer.parseInt(jo.getOde_quantity());
+                                    if (getallCartProductLists.isEmpty()) {
+                                        //     recyclerView.setVisibility(View.GONE);
+                                        //    empty_view.setVisibility(View.VISIBLE);
+                                        mCartItemCount = 0;
+                                        textCartItemCount.setText(mCartItemCount);
+                                    } else {
+                                        //  recyclerView.setVisibility(View.VISIBLE);
+                                        //  empty_view.setVisibility(View.GONE);
+                                        int qty = 0;
+                                        for (int i = 0; i < result.getProduct().size(); i++) {
+                                            AllCartProduct jo = result.getProduct().get(i);
+                                            qty = qty + Integer.parseInt(jo.getOde_quantity());
+                                        }
+                                        int a = qty;
+                                        mCartItemCount = a;
+                                        textCartItemCount.setText(a + "");
                                     }
-                                    int a = qty;
-                                    mCartItemCount= a ;
-                                    textCartItemCount.setText(a + "");
+                                } else {
+                                    //recyclerView.setVisibility(View.GONE);
+                                    //empty_view.setVisibility(View.VISIBLE);
+
+
                                 }
-                            } else {
-                                //recyclerView.setVisibility(View.GONE);
-                                //empty_view.setVisibility(View.VISIBLE);
-
-
                             }
+
+                        } else if (result.getStatus().equals("empty_cart")) {
+
+                        } else {
+
                         }
-
-                    } else if (result.getStatus().equals("empty_cart")){
-
-                    }
-                    else
-                    {
+                    } else {
+                        // response received but request not successful (like 400,401,403 etc)
 
                     }
-                } else {
-                    // response received but request not successful (like 400,401,403 etc)
-
                 }
-            }
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
+
+                @Override
+                public void onFailure(Throwable t) {
+                }
+            });
+
+
+
+        }
         return mCartItemCount;
 
     }
@@ -377,8 +417,17 @@ public class Product extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_cart) {
-            Intent i1 = new Intent(Product.this,Cart.class);
-            startActivity(i1);
+            if(user_id.equals("1")){
+                Toast.makeText(Product.this, "Please Login First", Toast.LENGTH_LONG).show();
+                Intent i1=new Intent(Product.this, Login.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i1);
+            }
+            else {
+                Intent i1 = new Intent(Product.this,Cart.class);
+                startActivity(i1);
+            }
+
         }
         if (id == R.id.action_search) {
             Intent i1 = new Intent(Product.this,Searchactivity.class);
@@ -659,102 +708,5 @@ public class Product extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public void callEventData1(String mem_string,String user_id) {
-       final DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
-        mDilatingDotsProgressBar.showNow();
-        RestClient.GitApiInterface service = RestClient.getClient();
 
-        Call<AllHome> call = service.getAllHome(mem_string,user_id);
-        call.enqueue(new Callback<AllHome>() {
-            @Override
-            public void onResponse(Response<AllHome> response) {
-                //mDilatingDotsProgressBar.hideNow();
-                Log.d("fgh", "Status Code = " + response.code());
-                if (response.isSuccess()) {
-                    // request successful (status code 200, 201)
-                    AllHome result = response.body();
-
-                    if (result.getStatus().equals("success")) {
-
-
-                        if (result.getExpandcat() != null) {
-                            if (result.getExpandcat().size() > 0) {
-                              //  getallHomeAllExpandLists.clear();
-                                getallHomeAllExpandLists.addAll(result.getExpandcat());
-                                //  adapter2.notifyDataSetChanged();
-
-
-
-                                for (int i =0 ;i<getallHomeAllExpandLists.size();i++){
-                                    ArrayList<Phone> iphones = new ArrayList<>();
-                                    String name = getallHomeAllExpandLists.get(i).getCat_name();
-                                    String description = getallHomeAllExpandLists.get(i).getCat_description();
-                                    String offer = getallHomeAllExpandLists.get(i).getCat_offer();
-                                    String image = getallHomeAllExpandLists.get(i).getCat_image();
-
-                                    for (int j=0;j<getallHomeAllExpandLists.get(i).getExpandsubcat().size();j++)
-                                    {
-                                        String subname = getallHomeAllExpandLists.get(i).getExpandsubcat().get(j).getSub_name();
-                                        String subimage = getallHomeAllExpandLists.get(i).getExpandsubcat().get(j).getSub_image();
-                                        String suboffer = getallHomeAllExpandLists.get(i).getExpandsubcat().get(j).getSub_offer();
-                                        String subid = getallHomeAllExpandLists.get(i).getExpandsubcat().get(j).getSub_id();
-                                        String subdetails = getallHomeAllExpandLists.get(i).getExpandsubcat().get(j).getSub_description();
-
-                                        SubCategoryDetails cat=new SubCategoryDetails();
-                                        cat.setSubCategoryName( subname );
-                                        cat.setSubCategoryId( subid );
-                                        event.add(cat);
-                                        catadb=new SubCategoryAdapterList( Product.this,  event);
-                                        subcat.setAdapter( catadb );
-                                        subcat.setLayoutManager( new LinearLayoutManager( Product.this,LinearLayoutManager.HORIZONTAL,false ) );
-
-                                     /*   adapter1.SetOnItemClickListener(new SelectHomeDetailAdapter1.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(View view, int position) {
-                                                startActivity(new Intent(getBaseContext(),Product.class).putExtra("sub_cat_id",getallHomeAllExpandLists.get(position).getExpandsubcat().get(position).getSub_cat_id()).putExtra("sub_cat_name",getallHomeAllExpandLists.get(position).getExpandsubcat().get(position).getSub_name()));
-                                            }
-                                        });
-*/
-                                        // iphones.add(new Phone(subname+"!-"+subimage+"!-"+suboffer+"!-"+subid+"!-"+subdetails));
-                                    }
-                                  ///  mobileOSes.add(new MobileOS(name+"!-"+description+"!-"+offer+"!-"+image, iphones));
-                                }
-                               // adapter2 = new RecyclerAdapter(getContext(),mobileOSes);
-                               // recyclerView2.setAdapter(adapter2);
-
-
-
-
-                            } else {
-                             //   recyclerView2.setVisibility(View.GONE);
-                         //       empty_view.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                    } else {
-                       // recyclerView1.setVisibility(View.GONE);
-                       // recyclerView2.setVisibility(View.GONE);
-                       // recyclerView3.setVisibility(View.GONE);
-                       // recyclerView.setVisibility(View.GONE);
-                       // empty_view.setVisibility(View.VISIBLE);
-                    }
-
-                } else {
-                    // response received but request not successful (like 400,401,403 etc)
-                   // recyclerView1.setVisibility(View.GONE);
-                   // recyclerView2.setVisibility(View.GONE);
-                   // recyclerView3.setVisibility(View.GONE);
-                   // recyclerView.setVisibility(View.GONE);
-                   // empty_view.setVisibility(View.VISIBLE);
-                }
-                mDilatingDotsProgressBar.hideNow();
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-       //         mDilatingDotsProgressBar.hideNow();
-            }
-        });
-
-    }
 }

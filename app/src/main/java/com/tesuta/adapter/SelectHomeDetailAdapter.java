@@ -2,6 +2,7 @@ package com.tesuta.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.tesuta.models.AllHomeProductList;
 import com.tesuta.models.UserAddCart;
 import com.tesuta.rest.Config;
 import com.tesuta.rest.RestClient;
+import com.tesuta.shopping.Login;
 import com.tesuta.shopping.Master_Home;
 import com.squareup.picasso.Picasso;
 
@@ -80,7 +82,7 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
         gmailVH.h_p_offer.setText(text3);
         gmailVH.h_p_name.setText(text6);
         gmailVH.h_p_unit.setText(text7);
-        gmailVH.h_p_actual_cost.setText(text4);
+        gmailVH.h_p_actual_cost.setText(text5);
         String cartval=String.format(res.getString(R.string.txt_message223),getallHomeAllProductLists.get(i).getCart_val());
 
 
@@ -119,7 +121,18 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
             gmailVH.h_p_add.setVisibility(View.VISIBLE);
         }
 
-        gmailVH.h_p_offer_cost.setText(text5);
+
+        if(Integer.parseInt(getallHomeAllProductLists.get(i).getCart_val())>0)
+        {
+            double ac=Double.parseDouble( gmailVH.h_p_actual_cost.getText().toString());
+            int ctv=Integer.parseInt(getallHomeAllProductLists.get(i).getCart_val());
+            double ttc=ac+ctv;
+            String t = String.valueOf(Double.parseDouble( gmailVH.h_p_actual_cost.getText().toString()) * Integer.parseInt(getallHomeAllProductLists.get(i).getCart_val()));
+            gmailVH.h_p_offer_cost.setText(t);
+        }
+        else{
+            gmailVH.h_p_offer_cost.setText(text5);
+        }
         try
         {
             Picasso.with(context).load(getallHomeAllProductLists.get(i).getPro_image()).into(gmailVH.h_p_image);
@@ -167,11 +180,20 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
             @Override
             public void onClick(View view) {
 
-                addtocart(gmailVH,Config.mem_string, getallHomeAllProductLists.get(i).getUser_id(),getallHomeAllProductLists.get(i).getPro_id(),getallHomeAllProductLists.get(i).getTpd_id());
+                if(user_id.equals("1")){
+                    Toast.makeText(context, "Please Login First", Toast.LENGTH_LONG).show();
+                    Intent i1=new Intent(context, Login.class);
+                    i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(i1);
+                }
+                else {
+                    addtocart(gmailVH, Config.mem_string, getallHomeAllProductLists.get(i).getUser_id(), getallHomeAllProductLists.get(i).getPro_id(), getallHomeAllProductLists.get(i).getTpd_id());
 //                gmailVH.count.setText( TotalCount );
-         //       Master_Home master= new Master_Home(TotalCount);
+                    //       Master_Home master= new Master_Home(TotalCount);
+                }
             }
         });
+
     }
 
    /* private void getunit(final GmailVH gmailVH, final String text1) {
@@ -270,6 +292,8 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
                             gmailVH.c_quantity.setText(String.valueOf(Integer.parseInt(ttl)+1));
                         TextView txtcart=((Master_Home)context).findViewById(R.id.cart_badge);
                         txtcart.setText(String.valueOf(Integer.parseInt(txtcart.getText().toString())+1));
+                        String t=String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString()));
+                        gmailVH.h_p_offer_cost.setText(t);
                     }
                     else
                     {
@@ -316,6 +340,10 @@ public class SelectHomeDetailAdapter extends RecyclerView.Adapter<SelectHomeDeta
                             i1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(i1);
                             ((Master_Home)context).finish();*/
+                        }
+                        else{
+                            String t=String.valueOf(Double.parseDouble(gmailVH.h_p_actual_cost.getText().toString())*Integer.parseInt(gmailVH.c_quantity.getText().toString()));
+                            gmailVH.h_p_offer_cost.setText(t);
                         }
                     }
                     else

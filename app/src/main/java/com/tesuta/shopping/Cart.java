@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -37,6 +38,7 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +66,17 @@ public class Cart extends AppCompatActivity {
     Button start_shopping;
     String coupenid=null;
     RelativeLayout fullrel,mainrel;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(user_id.equals("1")){
+            Toast.makeText(Cart.this, "Please Login First", Toast.LENGTH_LONG).show();
+            Intent i1=new Intent(Cart.this,Login.class);
+            i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i1);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +287,7 @@ public class Cart extends AppCompatActivity {
     public void callCartData() {
         c_linear.setVisibility(View.INVISIBLE);
         promocard.setVisibility(View.GONE);
-        coupentxt.setText("Apply Coupen");
+        coupentxt.setText("Apply Coupon");
         final DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
         mDilatingDotsProgressBar.showNow();
         RestClient.GitApiInterface service = RestClient.getClient();
@@ -378,7 +391,7 @@ public class Cart extends AppCompatActivity {
                         txt_delivery_cost.setText(result.getShipping());
                         promocard.setVisibility(View.VISIBLE);
                         txt_discount_cost.setText(result.getCoupen());
-                        coupentxt.setText("Coupen Applied "+result.getCoupencode());
+                        coupentxt.setText("Coupon Applied "+result.getCoupencode());
                         c_linear.setVisibility(View.VISIBLE);
                     } else if (result.getStatus().equals("empty_cart")){
                         recyclerView.setVisibility(View.INVISIBLE);

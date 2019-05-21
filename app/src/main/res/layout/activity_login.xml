@@ -74,6 +74,13 @@
                 android:background="@drawable/edittext1"
                 android:layout_height="wrap_content" />
 -->
+
+            <CheckBox android:id="@+id/deliverybtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Login"
+                android:onClick="onCheckboxClicked"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
