@@ -34,7 +34,7 @@ public class PhoneViewHolder1 extends ChildViewHolder {
         od_actual_cost = (TextView) itemView.findViewById(R.id.od_actual_cost);
         od_offer_cost = (TextView) itemView.findViewById(R.id.od_offer_cost);
         od_unit = (TextView) itemView.findViewById(R.id.od_unit);
-        od_quntity = (TextView) itemView.findViewById(R.id.od_quntity);
+        //od_quntity = (TextView) itemView.findViewById(R.id.od_quntity);
         od_total = (TextView) itemView.findViewById(R.id.od_total);
         od_name = (TextView) itemView.findViewById(R.id.od_name);
         od_image = (ImageView) itemView.findViewById(R.id.od_image);
@@ -48,7 +48,7 @@ public class PhoneViewHolder1 extends ChildViewHolder {
         od_actual_cost.setText(seperatr_data[1]);
         od_offer_cost.setText(seperatr_data[2]);
         od_unit.setText("Unit :- "+seperatr_data[6]);
-        od_quntity.setText(seperatr_data[4]);
+       // od_quntity.setText(seperatr_data[4]);
         od_total.setText("₹ "+seperatr_data[5]);
         sub_id = seperatr_data[3];
         try {

@@ -153,7 +153,7 @@ public class Cart extends AppCompatActivity {
         final_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i1 = new Intent(Cart.this,Checkout.class);
+                if(Double.parseDouble(c_checktotalcost.getText().toString())<1000){Intent i1 = new Intent(Cart.this,Checkout.class);
                 i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if(coupen==null) {
                     i1.putExtra("disc","0");
@@ -164,7 +164,10 @@ public class Cart extends AppCompatActivity {
                     i1.putExtra("disc",coupen);
                     i1.putExtra("coupenid",coupenid);
                 }
-                startActivity(i1);
+                startActivity(i1);}
+                else{
+                    Toast.makeText(Cart.this, "You can not order above Rs.1000", Toast.LENGTH_SHORT).show();
+                }
              /*  LayoutInflater layoutInflater = (LayoutInflater)Cart.this.getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView = layoutInflater.inflate(R.layout.popu, null);
                 popupWindow = new PopupWindow(

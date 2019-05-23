@@ -54,7 +54,7 @@
 
         <EditText
             android:layout_marginTop="10dp"
-            android:hint="If you have any query or feedback, write ie it here..."
+            android:hint="If you have any queries or feedback, please feel free to send us a message"
             android:inputType="textMultiLine"
             android:id="@+id/edt_message"
             android:layout_height="match_parent"
