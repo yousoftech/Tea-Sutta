@@ -93,12 +93,12 @@ public class OSViewHolderDelivery1 extends GroupViewHolder {
         or_quntity.setText(seperatr_data[3]);
         or_address.setText(seperatr_data[7]);
         or_pincode.setText(seperatr_data[8]);
-        if (seperatr_data[1].equals("Cancel"))
+        if (seperatr_data[1].equals("Cancel") )
         {
             or_status.setTextColor(Color.RED);
         }
 
-        if (seperatr_data[1].equals("Confirm"))
+        if (seperatr_data[1].equals("Confirm")|| seperatr_data[1].equals("Out for Delivery"))
         {
             btndone.setVisibility(View.VISIBLE);
         }

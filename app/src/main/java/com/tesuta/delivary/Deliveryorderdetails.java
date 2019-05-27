@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.tesuta.R;
 import com.tesuta.adapter.MobileOS1;
@@ -80,6 +81,7 @@ public class Deliveryorderdetails extends AppCompatActivity {
             callorderdetails(Config.mem_string, user_id);
         }
 
+
     }
 
     private void callorderdetails(String mem_string, String user_id) {
@@ -91,9 +93,11 @@ public class Deliveryorderdetails extends AppCompatActivity {
         call.enqueue(new Callback<AllOrderDelivery>() {
             @Override
             public void onResponse(Response<AllOrderDelivery> response) {
+                mobilelOSes.clear();
                 mDilatingDotsProgressBar.hideNow();
                 Log.d("fgh", "Status Code = " + response.code());
                 if (response.isSuccess()) {
+
                     // request successful (status code 200, 201)
                     AllOrderDelivery result = response.body();
                     if (result.getStatus().equals("success")) {
@@ -228,6 +232,14 @@ public class Deliveryorderdetails extends AppCompatActivity {
             startActivity(i);
             finish();
 
+        }
+        if(id==R.id.refresh){
+            status = NetworkUtils.getConnectivityStatus(Deliveryorderdetails.this);
+            if (status.equals("404")) {
+                linear_no_internet.setVisibility(View.VISIBLE);
+            } else {
+                callorderdetails(Config.mem_string, user_id);
+            }
         }
 
 

@@ -65,12 +65,20 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
 
 
-
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(MainActivity.this, Check.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
             finish();
+
+        if(id==R.id.refresh){
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
+            Intent i1 = new Intent(MainActivity.this, Deliveryorderdetails.class);
+            i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i1);
+            finish();
+        }
 
         }
 
